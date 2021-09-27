@@ -1,0 +1,99 @@
+===========for script
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.1.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyBWfCo44afVSfGor1qPrjTXJktOZni2xOo",
+    authDomain: "ulearn-ffc79.firebaseapp.com",
+    projectId: "ulearn-ffc79",
+    storageBucket: "ulearn-ffc79.appspot.com",
+    messagingSenderId: "187142078708",
+    appId: "1:187142078708:web:7e4fea560c75805a731ea1",
+    measurementId: "G-X5RPWYLHVV"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+
+===========for SDK download through npm
+After entering this>: npm install firebase  
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBWfCo44afVSfGor1qPrjTXJktOZni2xOo",
+  authDomain: "ulearn-ffc79.firebaseapp.com",
+  projectId: "ulearn-ffc79",
+  storageBucket: "ulearn-ffc79.appspot.com",
+  messagingSenderId: "187142078708",
+  appId: "1:187142078708:web:7e4fea560c75805a731ea1",
+  measurementId: "G-X5RPWYLHVV"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+
+
+
+If you use Firebase hosting, then initialization is called automatically through SDK auto-configuration, i.e. when you have this line in index.html:
+<script src="/__/firebase/init.js"></script> ,you don't need to call initializeApp(config).
+
+"When you deploy to Firebase or test your app locally, this script automatically configures the Firebase JavaScript SDK for the active Firebase project and initializes the SDK." SDK auto-configuration.
+========================
+
+
+<div id="message">
+      <h2>Welcome</h2>
+      <h1>Firebase Hosting Setup Complete</h1>
+      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
+      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
+    </div>
+
+
+<script defer src="/__/firebase/init.js?useEmulator=fasle"></script> <!-- Default = true -->
+  
+
+<script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+    
+
+
+<!--
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-analytics-compat.js"></script>
+	-->  
+
+
+var config = {
+     uri: "abc"
+   }
+
+is different from 
+
+var config = function show(){
+    
+   } or
+
+var config = show(){
+   } or
+
+var config = () => {
+   }
