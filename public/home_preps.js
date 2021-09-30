@@ -1,5 +1,7 @@
 'use strict';
 
+import app from "./index.html"
+
 class LikeButton extends React.Component {
   constructor(props) {
     super(props);
@@ -10,7 +12,7 @@ class LikeButton extends React.Component {
         arg.preventDefault();
 	    arg.stopPropagation();
 	    console.log(arg);
-	    FB.auth().signOut();
+	    app.auth().signOut();
 	    window.location.pathname = 'index.html'; //Redirect to homepage.
   }
 
@@ -40,5 +42,5 @@ class LikeButton extends React.Component {
   }
 }
 
-const domContainer = document.querySelector('#homepageView');
+const domContainer = document.querySelector('#testingReactView');
 ReactDOM.render(<LikeButton/>, domContainer);
