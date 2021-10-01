@@ -2,21 +2,36 @@
 const SET_OUT = "SET_LOGOUT_LISTENER";
 const CLEAR = "CLEAR_LOGIN_LISTENER";
 
+var reusableButton, navDrawerRef, mainNavRef;
+var isnavDrawerOpened = true;
+
 
 document.addEventListener('DOMContentLoaded', function() {
         // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
         // // The Firebase SDK is initialized and available here!
-         var reusableButton;
+         mainNavRef = document.getElementById('mainNav');
+         console.log(mainNavRef);
+         navDrawerRef = document.getElementById('navDrawer');
          firebase.auth().onAuthStateChanged(user => {
           if(user){     //Signed in.  Load Logged in page
+             if(!isnavDrawerOpened){
+                  navDrawerRef.style.display = 'block';
+                  mainNavRef.style.display = 'block';
+                  isnavDrawerOpened = true;
+             }
+
              reusableButton = document.getElementById('goingIn');
              setLoginListerners(SET_OUT, reusableButton);
              reusableButton.innerHTML = "Sign out";
              reusableButton.setAttribute('class', 'btn bg-danger text-light');
              setLoginListerners(CLEAR, document.getElementById('body_main_child'), null);
              //alert("Welcome!");
-
           }else if(!user){    //Not Signed in.
+             if(isnavDrawerOpened){
+                  navDrawerRef.style.display = 'none';
+                  mainNavRef.style.display = 'none';
+                  isnavDrawerOpened = false;
+             }
              reusableButton = document.getElementById('goingIn');
              setLoginListerners(SET_IN, reusableButton);
              reusableButton.innerHTML = "Sign in";
