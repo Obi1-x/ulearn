@@ -17,4 +17,8 @@ const firebaseConfig = {
 
 //Initialize Firebase
 var app = firebase.initializeApp(firebaseConfig);
+// Get a reference to the database service
+var database = firebase.database();
+// Get a reference to the storage service
+var storage = firebase.storage();
 //const analytics = getAnalytics(app);

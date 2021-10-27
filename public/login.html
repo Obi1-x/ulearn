@@ -20,17 +20,54 @@
 			font-size:10px;
 			color:#145A5757;
 		}
-</style>
+  </style>
+   
+   <!-- style="width: 18rem;" form card -->
+   <div id="logup" class="container card mt-5">
 
-   <div id="logup" class="container d-flex flex-column align-items-center text-display-5"> <!-- Add bootstrap if it becomes an issue-->
-    <h1>ULearn</h1>
-    <div id="firebaseui-auth-container"></div>
-    <p id="load" class="logining">Firebase SDK Loading&hellip;</p>
-    <button class="btn btn-secondary">Close</button>
+    <div class="d-flex flex-column align-items-center my-5 text-display-5">
+     <button onclick="window.location.pathname = './index.html';" type="button" class="btn-close align-self-end" aria-label="Close"></button>
+     <h1 class="my-5">ULearn</h1>
+
+
+
+     <div id="authenticate">
+      <div id="firebaseui-auth-container"></div>
+      <p id="load" class="logining">Firebase SDK Loading&hellip;</p>
+     </div>
+
+
+
+
+     <div id="roleSelect" class="d-flex flex-column align-items-center">
+     <h3 id="roleheader">Select role</h3>
+
+     <div id="roleS1" class="container w50">
+      <div  class="card-group">
+
+       <div id="studentcard" class="card mx-2 border-primary" onclick="simuClick(this);">
+        <img src="./student.png" class="card-img-top" width="10" height="80%" alt="...">
+        <h5 class="card-title align-self-center text-primary">Student</h5>
+       </div>
+
+       <div id="tutorcard" class="card mx-2" onclick="simuClick(this);">
+        <img src="lecturer.png" class="card-img-top p-3" width="10" height="80%" alt="...">
+        <h5 class="card-title align-self-center">Tutor</h5>
+       </div>
+
+      </div>
+     </div>
+
+     <button id="submitRole" type="submit" class="btn btn-primary my-3">Submit</button>
+     </div>
+
+
+
+    </div>
    </div>
 
+   
    <script type="text/javascript" src='login.js'></script>
-
 
 
 
