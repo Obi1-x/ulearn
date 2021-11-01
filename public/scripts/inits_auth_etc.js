@@ -1,5 +1,7 @@
 ﻿//This script handles functionality involved with authentication and authorization.
 
+//import NavSelections from './ulearn_functions.js';
+
 const SET_IN = "SET_LOGIN_LISTENER";
 const SET_OUT = "SET_LOGOUT_LISTENER";
 const CLEAR = "CLEAR_LOGIN_LISTENER";
@@ -85,9 +87,10 @@ function signingOut(et){
    et.preventDefault();
    et.stopPropagation();
    console.log("Signing out");
-   firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + 'status/').set("offline");
-   firebase.auth().signOut();
-   alert("See you soon!");  //FIND ANOTHER WAY TO INDICATE OFFLINE STATUS.
+   firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/status/').set("offline", (error) => {
+       if(!error) firebase.auth().signOut();
+       alert("See you soon!");  //FIND ANOTHER WAY TO INDICATE OFFLINE STATUS.
+   });
 }
 
 async function tidyNavDrawer(){
@@ -104,6 +107,7 @@ async function tidyNavDrawer(){
 			   
                USERROLE = userRole.val();
                document.getElementById('nav_role').innerHTML = USERROLE;
+               firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/status/').set("online");
 			});
 
   if(USERROLE == "Tutor"){ //My Courses
@@ -114,5 +118,6 @@ async function tidyNavDrawer(){
         navList.setAttribute('class', 'navbar-nav nav-pills flex-column  mb-auto bg-dark');
         navList.children[4].children[0].innerHTML = "My courses";
   }
+
   NavSelections(document.getElementById('defaultClick')); //Handle Logged out case.
 }

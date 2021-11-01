@@ -10,18 +10,18 @@ var submitRoleBtn = document.getElementById('submitRole');
 firstFunction(user_name);
 
 function UIconfig(){
-    uiConfig = {
-  callbacks: {
+  uiConfig = {
+   callbacks: {
     signInSuccessWithAuthResult: async function(authResult, redirectUrl) {
       // User successfully signed in.
       // Return type determines whether we continue the redirect automatically
       // or whether we leave that to developer to handle.
       var firstSign = await authResult.additionalUserInfo.isNewUser
-      console.log("firstSign: " + firstSign);
+      console.log("firstSign: ", firstSign);
       if(firstSign){
          toRoleSelect();
       }else if(!firstSign){
-          updateStatus(); //window.location.pathname = './index.html';
+          window.location.pathname = './index.html';
       }
 
       //alert("Welcome to ULearn! Please choose a role.");
@@ -30,7 +30,6 @@ function UIconfig(){
     uiShown: function() {
     console.log("Sign in");
       // The widget is rendered before signing in.
-      //Hidden individually to for it to work as hiding the parent element didnt work.
     }
   },
   // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
@@ -47,9 +46,9 @@ function UIconfig(){
 }
 }
 
-function firstFunction(username){
+function firstFunction(userName){
     selectedRole = "Student";
-    if(username == null){
+    if(userName == null){
        roleHeader.style.display = 'none';
        roleContainer.style.display = 'none';
        submitRoleBtn.style.display = 'none';
@@ -68,7 +67,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     firebase.auth().onAuthStateChanged(async (user) => {
         if(user){
-           firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + 'status/').set("offline");
            user_name = await user.displayName;
            console.log(user_name);
            
@@ -129,19 +127,11 @@ function toRoleSelect(){
   submitRoleBtn.addEventListener('click', async(e)=>{
         var newBucket = 
         {
-          "status" : "Online"
+          "status" : "online"
         }
-        console.log(newBucket);
         await firebase.database().ref('/ulearnData/userData/' + selectedRole + 's/' + user_name + '/').set(newBucket);
         await firebase.database().ref('/ulearnData/userData/roles/' + user_name + '/').set(selectedRole);
-         
-         alert("Welcome to ULearn");
-         updateStatus();
+        alert("Welcome to ULearn");
+        window.location.pathname = './index.html';
    });
-}
-
-function updateStatus(){
-      firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + 'status/').set("online", (error) => {
-        if(!error) window.location.pathname = './index.html';
-      });
 }

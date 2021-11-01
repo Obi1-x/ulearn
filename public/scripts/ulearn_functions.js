@@ -73,7 +73,7 @@ class CardColumn extends React.Component{
           }else { //Removed the if  if(USERROLE == "Tutor")
              returnElement = <div className="d-flex justify-content-between align-items-center mb-2 mx-2">
                            <button id={this.props.cardTitle + "_addBtn"} disabled="disabled" className="btn btn-sm btn-outline-secondary">Add</button>
-                           <small className="text-muted">{this.props.cardSmallDetail + " lectures"}</small>
+                           <small className="text-muted">{this.props.cardSmallDetail + " lecture(s)"}</small>
                           </div>
           }
      }
@@ -86,8 +86,8 @@ class CardColumn extends React.Component{
         <div className="card shadow-sm">
          <div onClick={(t) => ReactDOM.render(<LectureViewDiv populateCourseWith={this.props.dataCollection}/>, bodyContainer)}>  
 
-      <PrepImage iUrl={this.props.cardImage}
-                    cTitle={this.props.cardTitle}/>  
+  {/*    <PrepImage iUrl={this.props.cardImage}
+                    cTitle={this.props.cardTitle}/>  */}
 
           <div className="card-body">
            <h3 className="card-title display-6">{this.props.cardTitle}</h3>
@@ -545,9 +545,15 @@ class LectureViewDiv extends React.Component{
 
 
  handleAddButton(){
-    var returnComponent;
+    var returnComponent, assessBtn, smallOrButton;
     if(USERROLE == "Tutor"){
-        returnComponent = <small id="interactions" className="text-dark">Added by 0 student(s).</small>
+        if(USERNAME == this.props.populateCourseWith.creator) assessBtn = <button className="btn-sm btn-outline-secondary" 
+                                                                                  type="button" 
+                                                                                  onClick={(assess) => ReactDOM.render(<AssessmentBuildDiv creationPoint={this.props.populateCourseWith.courseTitle} theCreator={this.props.populateCourseWith.creator} />, bodyContainer)}>Assessment</button>
+        returnComponent = <div className="d-flex mt-5 justify-content-between">
+                           <small id="interactions" className="text-dark">Added by 0 student(s).</small>
+                           {assessBtn}
+                          </div>
         firebase.database().ref('/ulearnData/appData/courseInteractions/' + this.props.populateCourseWith.courseTitle + '_' + this.props.populateCourseWith.creator)
               .once('value')
               .then((inters)=> {
@@ -557,8 +563,15 @@ class LectureViewDiv extends React.Component{
                   }
               });
     }else { //Default is student.
-        if(hasAdded(this.props.populateCourseWith.courseTitle + "_" + this.props.populateCourseWith.creator))returnComponent = <button type="button" disabled="disabled" className="btn btn-sm btn-outline-secondary">Add to course list</button> //The course been previously added.
-        else returnComponent = <button type="button" id={this.props.populateCourseWith.courseTitle + '_addBtn'} className="btn btn-sm btn-outline-secondary" onClick={(put) => this.addcourse_ToList(put)}>Add to course list</button>
+        if(hasAdded(this.props.populateCourseWith.courseTitle + "_" + this.props.populateCourseWith.creator)){
+           smallOrButton = <button type="button" disabled="disabled" className="btn btn-sm btn-outline-secondary">Add to course list</button> //The course been previously added.
+           assessBtn = <button className="btn-sm btn-outline-secondary" type="button" onClick={(assess) => ReactDOM.render(<AssessmentViewDiv/>, bodyContainer)}>Assessment</button>
+        }else smallOrButton = <button type="button" id={this.props.populateCourseWith.courseTitle + '_addBtn'} className="btn btn-sm btn-outline-secondary" onClick={(put) => this.addcourse_ToList(put)}>Add to course list</button>
+
+        returnComponent = <div className="d-flex mt-5 justify-content-between">
+                           {smallOrButton}
+                           {assessBtn}
+                          </div>
     }
     return returnComponent;
   }
@@ -614,22 +627,26 @@ class LectureViewDiv extends React.Component{
 
        <div className="row">
 
-       
+       {/*
         <div className="col-3">
         <PrepImage iUrl={this.props.populateCourseWith.courseImageUrl}
                       cTitle={this.props.populateCourseWith.courseTitle}/>
-        </div> 
+        </div> */}
 
         <div className="col-9 d-flex flex-column">
          <h5 className="card-title">{this.props.populateCourseWith.courseTitle}</h5>
          <p className="card-text">{this.props.populateCourseWith.courseDescription}</p>
          <small className="text-muted">{"by " + this.props.populateCourseWith.creator}</small>
-         <div className="d-flex mt-5 justify-content-between">
-          {this.handleAddButton()}
-          <small className="text-muted">{this.props.populateCourseWith.lectureCount + " lectures"}</small>
-         </div>
+         {this.handleAddButton()}
         </div>
 
+       </div>
+
+       <hr/>
+
+       <div className="d-flex flex-row justify-content-between">
+        <h5 className="display-6">Lectures</h5>
+        <small className="me-3 align-self-center">{"Total: " + this.props.populateCourseWith.lectureCount}</small>
        </div>
 
        <hr/>
@@ -639,6 +656,88 @@ class LectureViewDiv extends React.Component{
       </div>
      );
  }
+}
+
+
+class AssessmentBuildDiv extends React.Component{
+     constructor(props) {
+      super(props);
+      this.referenceObject = {};
+     }
+
+     componentDidMount() {
+       this.whoToDisable();
+     }
+
+     whoToDisable(compare){
+      this.referenceObject[this.props.creationPoint] = this.props.theCreator;
+      var todisAble = document.getElementById("checkID_" + this.props.creationPoint + '_' + this.props.theCreator);
+      todisAble.checked = true;
+      todisAble.disabled = true;
+     }
+
+     buildCheckList(){
+      const possibleLinks = findMyCourses();
+      var checks = possibleLinks.map((checK) => <div key={"check_" + checK.courseTitle + '_' + checK.creator}
+                                                     className="mb-3 form-check"
+                                                     id={"ID_" + checK.courseTitle + '_' + checK.creator}>
+                                                 <input onChange={(checkB) => this.populateLinkedCourses(checkB.target.checked, checK.courseTitle, checK.creator)}
+                                                        type="checkbox" className="form-check-input" 
+                                                        id={"checkID_" + checK.courseTitle + '_' + checK.creator} 
+                                                        value={checK.courseTitle}/>
+                                                 <label className="form-check-label"
+                                                        htmlFor={"checkID_" + checK.courseTitle + '_' + checK.creator}>{checK.courseTitle}</label>
+                                                </div>
+                                                );
+      return checks;
+     }
+
+     populateLinkedCourses(isChecked, ident, creaTOR){
+        if(isChecked) this.referenceObject[ident] = creaTOR;
+        else if(!isChecked) this.referenceObject[ident] = "";
+        console.log(this.referenceObject);
+     }
+
+     submitAssess(asseCallback){
+
+     }
+
+     render(){
+       return(
+        <div>
+         <h3>New Assessment</h3>
+
+         <div className="my-4 col-md-6">
+          <label htmlFor="asseName" className="form-label">Assessment name</label>
+          <input type="text" id="asseName" className="form-control" placeholder="e.g End of year test" autoFocus="autoFocus" required="required"/>
+          <div className="invalid-feedback">Sholud not be blank.</div>
+         </div>
+       
+         <div className="my-4 col-md-6">
+          <label htmlFor="asseDisc" className="form-label">Assessment discription</label>
+          <input type="text" id="asseDisc" className="form-control" placeholder="e.g Test on courses linked to this test" required="required"/>
+          <div className="invalid-feedback">Sholud not be blank.</div>
+         </div>
+
+         <div className=" mt-4 mb-5 col-md-3">
+          <label htmlFor="couRefChecks" className="form-label">Course reference</label>
+          <div id="couRefChecks">
+           {this.buildCheckList()}
+          </div>
+         </div>
+         
+         <button id="submitAssessment" onClick={(ament) => this.submitAssess(ament)} type="submit" className="btn btn-primary my-3">Create assessment</button>
+
+        </div>
+       );
+     }
+}
+
+
+class AssessmentViewDiv extends React.Component{
+     render(){
+       return(<h1>Viewing assessment</h1>);
+     }
 }
 //========================================================================End inner component classes
 
@@ -664,6 +763,14 @@ class LectureInfo{
     this.courseRef = couref;
     this.created = new Date().getTime();
     this.lectureIndex = "unindexed";
+   }
+}
+
+class Assessment{
+   constructor(couRef, asseTitle, asseDesc){
+     this.courseRef = couRef; //Can be an array to reference several courses.
+     this.assessmentTitle = asseTitle;
+     this.assessmentDescription = asseDesc;
    }
 }
 
@@ -695,7 +802,7 @@ function NavSelections(clicked){
                              });
                          });
 
-                     //firebase.database().ref('/ulearnData/appData/courses/').off('child_added')  //remove listener from path();
+                     firebase.database().ref('/ulearnData/appData/courses/').off('child_added')  //remove listener from path();
              break;
         case "Dashboard": ReactDOM.render(<DashboardDiv/>, bodyContainer); //TODO close nav drawer after selection
              break;
@@ -707,11 +814,7 @@ function NavSelections(clicked){
                             });
                             ReactDOM.render(<LecturesDiv myCourseValueData={courseListArray} />, bodyContainer);
              break;
-        case "My courses": var myCoursesArray = new Array();
-                           coursesValuesArray.forEach(mycou => {
-                                      if(mycou.creator == USERNAME) myCoursesArray.push(mycou); //also do this filtering in database query.
-                                   });
-                           ReactDOM.render(<LecturesDiv myCourseValueData={myCoursesArray} />, bodyContainer); 
+        case "My courses": ReactDOM.render(<LecturesDiv myCourseValueData={findMyCourses()} />, bodyContainer); 
              break;
         case "Assessments": ReactDOM.render(<AssessmentsDiv/>, bodyContainer); 
              break;
@@ -722,4 +825,13 @@ function NavSelections(clicked){
   if(imgWidth < maxImgWidth){
       document.getElementById('navbarNav').setAttribute('class', 'collapse navbar-collapse bg-dark'); //Used to close nav bar after clicking (for small scrrens).
   }
+}
+
+
+function findMyCourses(){
+    var myCoursesArray = new Array();
+    coursesValuesArray.forEach(mycou => {
+                        if(mycou.creator == USERNAME) myCoursesArray.push(mycou); //also do this filtering in database query.
+                        });
+    return myCoursesArray;
 }
