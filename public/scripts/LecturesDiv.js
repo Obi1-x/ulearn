@@ -30,7 +30,8 @@ class LecturesDiv extends React.Component {
        <BodyContent 
                     id = {"mycourses"} 
                     header = {this.headerValue}
-                    itemValues = {this.props.myCourseValueData}/>
+                    itemValues = {this.props.myCourseValueData}
+                    forWho = "others"/>
 
      </div>
      );

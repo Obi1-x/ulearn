@@ -11,8 +11,8 @@ class AssessmentBuildDiv extends React.Component{
      }
 
      whoToDisable(compare){
-      this.referenceObject[this.props.creationPoint] = this.props.theCreator;
-      var todisAble = document.getElementById("checkID_" + this.props.creationPoint + '_' + this.props.theCreator);
+      this.referenceObject[this.props.parentData.courseTitle] = this.props.parentData.creator;
+      var todisAble = document.getElementById("checkID_" + this.props.parentData.courseTitle + '_' + this.props.parentData.creator);
       todisAble.checked = true;
       todisAble.disabled = true;
      }
@@ -69,15 +69,19 @@ class AssessmentBuildDiv extends React.Component{
       const assessLink = document.querySelector('#asseLink');
 
       var anAssessment = new Assessment(assessName.value, assessDescrip.value);
-      //anAssessment.creationPoint = this.props.creationPoint;
+      //anAssessment.creationPoint = this.props.parentData.courseTitle;
       anAssessment.courseRefs = this.referenceObject;
       anAssessment.assessmentLink = assessLink.value;
 
-      var assessRef = "/ulearnData/appData/assessments/";
+      var assessRef = "/ulearnData/appData/assessments/" + this.props.parentData.creator + '/' + this.props.parentData.courseTitle + '/';
       firebase.database().ref(assessRef).push()
           .set(anAssessment, (err_or) => {
                                       if (err_or) alert("An error occurred");
-                                      else alert("Assessment submitted");
+                                      else{
+                                        alert("Assessment submitted");
+                                        //Click back button
+                                        ReactDOM.render(<LectureViewDiv populateCourseWith={this.props.parentData}/>, bodyContainer)
+                                      }
                                       }
                                       );
      }
@@ -86,6 +90,7 @@ class AssessmentBuildDiv extends React.Component{
      render(){
        return(
         <div>
+        <button className="btn bg-success mb-3" onClick={(lin) => ReactDOM.render(<LectureViewDiv populateCourseWith={this.props.parentData}/>, bodyContainer)}>Back</button>
          <h3>New Assessment</h3>
 
          <div className="my-4 col-md-6">

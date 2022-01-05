@@ -1,8 +1,9 @@
 'use strict';
 
 const bodyContainer = document.querySelector('#body_main_child');
+var renderedBodyContainer;
 var previousClick, studentCourseList, numOfCourses;
-var coursesValuesArray;
+var coursesValuesArray, MyCoursesArray, CourseListArray, RequiredAssements, RequiredAssementsKeys;
 
 
 class DashboardDiv extends React.Component {
@@ -45,6 +46,7 @@ class Assessment{
      //this.creationPoint = "null";
      this.courseRefs = "null";
      this.assessmentLink = "null";
+     //this.interations;
    }
 }
 
@@ -72,7 +74,7 @@ function NavSelections(clicked){
                              .orderByChild('indexWithCreated')
                              .on('child_added', function(cData){ //Should filter 20 at a time.
                                  coursesValuesArray.push(cData.val());
-                                 if(coursesValuesArray.length == numOfCourses) ReactDOM.render(<HomeDiv courseValueData={coursesValuesArray} />, bodyContainer); 
+                                 if(coursesValuesArray.length == numOfCourses) renderedBodyContainer = ReactDOM.render(<HomeDiv courseValueData={coursesValuesArray} />, bodyContainer); 
                              });
                          });
 
@@ -86,19 +88,28 @@ function NavSelections(clicked){
                                  courseListArray.push(couItm);
                               }
                             });
+                            CourseListArray = courseListArray;
                             ReactDOM.render(<LecturesDiv myCourseValueData={courseListArray} />, bodyContainer);
              break;
-        case "My courses": ReactDOM.render(<LecturesDiv myCourseValueData={findMyCourses()} />, bodyContainer); 
+        case "My courses": MyCoursesArray = findMyCourses();
+                           ReactDOM.render(<LecturesDiv myCourseValueData={MyCoursesArray} />, bodyContainer); 
              break;
         case "Assessments": var assessmentArray = new Array();
-                            firebase.database().ref('/ulearnData/appData/assessments/').once('value').then(function(allAssessments){
-                               Object.values(allAssessments.val()).forEach(asses => {
+                            var whichRef = "/ulearnData/userData/Students/" + USERNAME + "/assessmentInteractions/"; //DEFAULT
+                            if(USERROLE == "Tutor") whichRef = '/ulearnData/appData/assessments/' + USERNAME + '/';
+
+                            firebase.database().ref(whichRef).once('value').then(function(allAssessments){
+                               Object.values(allAssessments.val()).forEach(assesParent => {
                                   if(USERROLE == "Tutor"){
-                                     if(asses.creator == USERNAME) assessmentArray.push(asses);
-                                  }//else if(student)
+                                     Object.values(assesParent).forEach(asses => {
+                                      assessmentArray.push(asses);
+                                     });
+                                  }else assessmentArray.push(assesParent);
                                });
+                               RequiredAssements = assessmentArray;
+                               RequiredAssementsKeys = Object.keys(allAssessments.val());
+                               ReactDOM.render(<AssessmentsDiv groupedssment={assessmentArray} miscData={RequiredAssementsKeys} />, bodyContainer); 
                             });
-                            ReactDOM.render(<AssessmentsDiv groupedssment={assessmentArray} />, bodyContainer); 
              break;
   }
 

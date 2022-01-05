@@ -2,13 +2,20 @@
 
 class BodyContent extends React.Component{
    doIteration(){
-     var retrievedCourses = this.props.itemValues.map((itm) => <CardColumn key = {itm.courseTitle + "_" + itm.creator}
-                                                                           cardImage = {itm.courseImageUrl}
-                                                                           cardTitle = {itm.courseTitle}
-                                                                           cardText = {itm.courseDescription}
-                                                                           cardSmallDetail = {itm.lectureCount}
-                                                                           dataCollection = {itm} 
-                                                                           displayFor = {this.props.id}/>); //Will be used when populating tutor data. 
+     var retrievedCourses;
+     if(this.props.forWho == "others"){
+        retrievedCourses = this.props.itemValues.map((itm) => <CardColumn key = {itm.courseTitle + "_" + itm.creator}
+                                                                          cardImage = {itm.courseImageUrl}
+                                                                          cardTitle = {itm.courseTitle}
+                                                                          cardText = {itm.courseDescription}
+                                                                          cardSmallDetail = {itm.lectureCount}
+                                                                          dataCollection = {itm} 
+                                                                          displayFor = {this.props.id}/>); //Will be used when populating tutor data. 
+     }else if(this.props.forWho == "assessment"){
+        retrievedCourses = this.props.itemValues.map((quiz, anIndex) => <CardColumnAssess key = {quiz.assessmentTitle + "_" + quiz.creator}
+                                                                                          quizData = {quiz}
+                                                                                          forNodeKey = {this.props.miscellanous[anIndex]}/>);
+     }
      return retrievedCourses;
    }
 

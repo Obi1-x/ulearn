@@ -14,7 +14,8 @@ class HomeDiv extends React.Component {
       <BodyContent 
                    id={"courses"} 
                    header={"Courses"}
-                   itemValues = {this.props.courseValueData}/>
+                   itemValues = {this.props.courseValueData}
+                   forWho = "others"/>
       <br/>
       <hr/>
       <br/>
@@ -22,7 +23,8 @@ class HomeDiv extends React.Component {
       <BodyContent 
                    id={"tutors"} 
                    header={"Tutors"}
-                   itemValues = {this.props.courseValueData}/> */}
+                   itemValues = {this.props.courseValueData}
+                   forWho = "others"/> */}
      </div>
     );
   }

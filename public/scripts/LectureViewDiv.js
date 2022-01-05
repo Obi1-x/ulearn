@@ -1,6 +1,12 @@
 'use strict';
 
+var PopulateAfterReturn;
+
 class LectureViewDiv extends React.Component{
+  constructor(props) {
+      super(props);
+  }
+
   addcourse_ToList(clickarg){
     var courseListRef = '/ulearnData/userData/Students/' + USERNAME + '/courseList/' + this.props.populateCourseWith.courseTitle + "_" + this.props.populateCourseWith.creator;
     var courseInteractionRef = '/ulearnData/appData/courseInteractions/' + this.props.populateCourseWith.courseTitle + "_" + this.props.populateCourseWith.creator + '/' + USERNAME
@@ -48,7 +54,7 @@ class LectureViewDiv extends React.Component{
     if(USERROLE == "Tutor"){
         if(USERNAME == this.props.populateCourseWith.creator) assessBtn = <button className="btn-sm btn-outline-secondary" 
                                                                                   type="button" 
-                                                                                  onClick={(assess) => ReactDOM.render(<AssessmentBuildDiv creationPoint={this.props.populateCourseWith.courseTitle} theCreator={this.props.populateCourseWith.creator} />, bodyContainer)}>Assessment</button>
+                                                                                  onClick={(assess) => ReactDOM.render(<AssessmentBuildDiv parentData={this.props.populateCourseWith} />, bodyContainer)}>Assessment</button>
         returnComponent = <div className="d-flex mt-5 justify-content-between">
                            <small id="interactions" className="text-dark">Added by 0 student(s).</small>
                            {assessBtn}
@@ -64,7 +70,7 @@ class LectureViewDiv extends React.Component{
     }else { //Default is student.
         if(hasAdded(this.props.populateCourseWith.courseTitle + "_" + this.props.populateCourseWith.creator)){
            smallOrButton = <button type="button" disabled="disabled" className="btn btn-sm btn-outline-secondary">Add to course list</button> //The course been previously added.
-           assessBtn = <button className="btn-sm btn-outline-secondary" type="button" onClick={(assess) => ReactDOM.render(<AssessmentViewDiv/>, bodyContainer)}>Assessment</button>
+           assessBtn = <button id="quizB" className="btn-sm btn-outline-secondary" type="button" onClick={(assess) => this.getAssessment(assess)}>Assessment</button>
         }else smallOrButton = <button type="button" id={this.props.populateCourseWith.courseTitle + '_addBtn'} className="btn btn-sm btn-outline-secondary" onClick={(put) => this.addcourse_ToList(put)}>Add to course list</button>
 
         returnComponent = <div className="d-flex mt-5 justify-content-between">
@@ -76,11 +82,65 @@ class LectureViewDiv extends React.Component{
   }
 
 
+  toggleModal(modalVisibility){
+    if(modalVisibility == "open"){
+        document.getElementById('mdrop').className = "modal-backdrop fade show";
+        document.getElementById('mdrop').style.display = "block";
+        document.getElementById('assessmentChooser').className = "modal fade show";
+        document.getElementById('assessmentChooser').style.display = "block";
+    }else if(modalVisibility == "close"){
+        document.getElementById('mdrop').className = "modal-backdrop fade";
+        document.getElementById('mdrop').style.display = "none";
+        document.getElementById('assessmentChooser').className = "modal fade";
+        document.getElementById('assessmentChooser').style.display = "none";
+    }
+  }
+
+
+  getAssessment(btnCallback){
+     var cloneForBuilder = new LectureViewDiv();
+     var quizGroups = new Array();
+     var forRef = "/ulearnData/appData/assessments/" + this.props.populateCourseWith.creator + '/' + this.props.populateCourseWith.courseTitle + '/';
+     firebase.database().ref(forRef).once('value').then(function(groupAssessments){
+      if(groupAssessments.val()){
+       const pushKeys = Object.keys(groupAssessments.val());
+
+       Object.values(groupAssessments.val()).forEach(ssementOptions => {
+         quizGroups.push(ssementOptions);
+       });
+       if(quizGroups.length > 1){
+          console.log("Opening chooser");
+          var quizOptions = quizGroups.map((qui, count) => <button key = {"quiz_" + qui.assessmentTitle}
+                                                            className = "btn btn-outline-primary col my-"
+                                                            onClick = {(quizObj) => ReactDOM.render(<AssessmentViewDiv neededData={qui} theNode={pushKeys[count]} />, bodyContainer)}> 
+                                                         {qui.assessmentTitle}
+                                                    </button> );
+
+          ReactDOM.render(quizOptions, document.getElementById('chooserBody'));
+          cloneForBuilder.toggleModal("open");
+       }
+       else if(quizGroups.length == 1) ReactDOM.render(<AssessmentViewDiv neededData={quizGroups[0]} />, bodyContainer);
+      }else if(!groupAssessments.val()){
+               document.getElementById('quizB').innerHTML = "No assessment yet";
+               document.getElementById('quizB').disabled = true;
+      }
+     });
+  }
+
+
+  selectParent(btnBack){
+      if(previousClick.innerHTML == "My courses") ReactDOM.render(<LecturesDiv myCourseValueData={MyCoursesArray} />, bodyContainer);
+      else if(previousClick.innerHTML == "Course list") ReactDOM.render(<LecturesDiv myCourseValueData={CourseListArray} />, bodyContainer);
+      else ReactDOM.render(<HomeDiv courseValueData={coursesValuesArray} />, bodyContainer);
+  }
+
+
    render(){
    var lectureContent;
    var classClone = new LectureViewDiv();
-    var numOfLectures = this.props.populateCourseWith.lectureCount;
-    var lecturesObjectArray = new Array();
+   PopulateAfterReturn = this.props.populateCourseWith;
+   var numOfLectures = this.props.populateCourseWith.lectureCount;
+   var lecturesObjectArray = new Array();
 
     this.fetchLectures().then(async function(lecFetched){
       await lecFetched.on('child_added', function(eve){
@@ -122,8 +182,37 @@ class LectureViewDiv extends React.Component{
     });
       
      return(
-      <div className="d-flex flex-column">
+     <div>
+      <button className="btn bg-success mb-3" onClick={(un) => this.selectParent(un)}>Back</button>
 
+      <div id="mdrop" className="modal-backdrop fade" style={{display: "none"}}></div>
+
+      <div className="modal fade"
+            id="assessmentChooser"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabIndex="-1" 
+            aria-labelledby="assessmentChooserLabel"
+            style={{display: "none"}}>
+
+        <div className="modal-dialog">
+         <div className="modal-content">
+
+          <div className="modal-header">
+           <h5 className="modal-title" id="assessmentChooserLabel">Select assessment</h5>
+           <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={(closeModal) => this.toggleModal("close")}></button>
+          </div>
+
+          <div className="modal-body">
+           <div id="chooserBody" className="row row-cols-1"></div>
+          </div>
+
+         </div>
+        </div>
+       </div>
+
+
+      <div className="d-flex flex-column">
        <div className="row">
 
        {/*
@@ -151,8 +240,8 @@ class LectureViewDiv extends React.Component{
        <hr/>
 
        <div id="allLecList"></div>
-
       </div>
+    </div>
      );
  }
 }

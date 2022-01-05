@@ -3,7 +3,6 @@
 class AssessmentsDiv extends React.Component {
    constructor(props) {
     super(props);
-    this.state = {clickedCard : "NULL"}
     this.headerValue = "Assessments"//"Added / just assessments";
    }
 
@@ -12,7 +11,9 @@ class AssessmentsDiv extends React.Component {
        <BodyContent 
                     id = {"myassessments"} 
                     header = {this.headerValue}
-                    itemValues = {this.props.groupedssment}/>
+                    itemValues = {this.props.groupedssment}
+                    forWho = "assessment"
+                    miscellanous = {this.props.miscData}/>
      );
    }
 }
