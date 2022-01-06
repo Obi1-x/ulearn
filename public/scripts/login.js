@@ -6,8 +6,25 @@ var roleUI = document.getElementById('roleSelect');
 var roleHeader = document.getElementById('roleheader');
 var roleContainer = document.getElementById('roleS1');
 var submitRoleBtn = document.getElementById('submitRole');
+var becomeAdminBtn = document.getElementById('adminApply');
 
 firstFunction(user_name);
+
+document.addEventListener('DOMContentLoaded', function() {
+	UIconfig();
+
+    firebase.auth().onAuthStateChanged(async (user) => {
+        if(user){
+           user_name = await user.displayName;
+           console.log(user_name);
+           
+           //toRoleSelect();
+        }else if(!user){     //Signed in.  Load Logged in page
+            var ui = new firebaseui.auth.AuthUI(firebase.auth());
+            ui.start('#firebaseui-auth-container', uiConfig);
+        }
+    });
+
 
 function UIconfig(){
   uiConfig = {
@@ -61,23 +78,6 @@ function firstFunction(userName){
     }
 }
 
-
-document.addEventListener('DOMContentLoaded', function() {
-	UIconfig();
-
-    firebase.auth().onAuthStateChanged(async (user) => {
-        if(user){
-           user_name = await user.displayName;
-           console.log(user_name);
-           
-           //toRoleSelect();
-        }else if(!user){     //Signed in.  Load Logged in page
-            var ui = new firebaseui.auth.AuthUI(firebase.auth());
-            ui.start('#firebaseui-auth-container', uiConfig);
-        }
-    });
-
-
     const loadEl = document.querySelector('#load');
         try {
           let app = firebase.app();
@@ -124,14 +124,24 @@ function toRoleSelect(){
   firstFunction(user_name);
   authUI.style.display = 'none';
 
-  submitRoleBtn.addEventListener('click', async(e)=>{
-        var newBucket = 
-        {
-          "status" : "online"
-        }
-        await firebase.database().ref('/ulearnData/userData/' + selectedRole + 's/' + user_name + '/').set(newBucket);
-        await firebase.database().ref('/ulearnData/userData/roles/' + user_name + '/').set(selectedRole);
-        alert("Welcome to ULearn");
-        window.location.pathname = './index.html';
-   });
+  submitRoleBtn.addEventListener('click', (e) => {
+     submitAction();
+     alert("Welcome to ULearn");
+     window.location.pathname = './index.html';
+  });
+
+  becomeAdminBtn.addEventListener('click'), (ad) => {
+     selectedRole = "Admin";
+     submitAction();
+     alert("You will be redirected to the admin page");
+     //window.location.pathname = './adminpage.html';
+  }
+}
+
+async function submitAction(){
+     var newBucket = {
+                      "status" : "online"
+                     }
+     await firebase.database().ref('/ulearnData/userData/' + selectedRole + 's/' + user_name + '/').set(newBucket);
+     await firebase.database().ref('/ulearnData/userData/roles/' + user_name + '/').set(selectedRole);
 }
