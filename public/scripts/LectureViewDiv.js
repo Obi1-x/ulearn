@@ -106,20 +106,24 @@ class LectureViewDiv extends React.Component{
        const pushKeys = Object.keys(groupAssessments.val());
 
        Object.values(groupAssessments.val()).forEach(ssementOptions => {
-         quizGroups.push(ssementOptions);
+         if(ssementOptions.visibilityStatus == "enabled") quizGroups.push(ssementOptions); //Censorship control.
        });
        if(quizGroups.length > 1){
           console.log("Opening chooser");
           var quizOptions = quizGroups.map((qui, count) => <button key = {"quiz_" + qui.assessmentTitle}
                                                             className = "btn btn-outline-primary col my-"
-                                                            onClick = {(quizObj) => ReactDOM.render(<AssessmentViewDiv neededData={qui} theNode={pushKeys[count]} />, bodyContainer)}> 
-                                                         {qui.assessmentTitle}
-                                                    </button> );
+                                                            onClick = {(quizObj) => ReactDOM.render(<AssessmentViewDiv neededData={qui} theNode={pushKeys[count]} from="lectureView" />, bodyContainer)}> 
+                                                            {qui.assessmentTitle}
+                                                           </button> );
 
           ReactDOM.render(quizOptions, document.getElementById('chooserBody'));
           cloneForBuilder.toggleModal("open");
        }
-       else if(quizGroups.length == 1) ReactDOM.render(<AssessmentViewDiv neededData={quizGroups[0]} />, bodyContainer);
+       else if(quizGroups.length == 1) ReactDOM.render(<AssessmentViewDiv neededData={quizGroups[0]} theNode={pushKeys[0]} from="lectureView" />, bodyContainer);
+       else if(quizGroups.length == 0){
+               document.getElementById('quizB').innerHTML = "No assessment yet";
+               document.getElementById('quizB').disabled = true;
+       }
       }else if(!groupAssessments.val()){
                document.getElementById('quizB').innerHTML = "No assessment yet";
                document.getElementById('quizB').disabled = true;
@@ -178,8 +182,8 @@ class LectureViewDiv extends React.Component{
               </div>);
           ReactDOM.render(lectureContent, document.querySelector('#allLecList'));
        }
-      });
-    });
+      }); //on block.
+    }); //then block.
       
      return(
      <div>
@@ -215,11 +219,11 @@ class LectureViewDiv extends React.Component{
       <div className="d-flex flex-column">
        <div className="row">
 
-       {/*
+       
         <div className="col-3">
         <PrepImage iUrl={this.props.populateCourseWith.courseImageUrl}
                       cTitle={this.props.populateCourseWith.courseTitle}/>
-        </div> */}
+        </div>
 
         <div className="col-9 d-flex flex-column">
          <h5 className="card-title">{this.props.populateCourseWith.courseTitle}</h5>

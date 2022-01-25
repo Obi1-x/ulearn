@@ -11,10 +11,6 @@ class HomeDiv extends React.Component {
   render() {
     return (
      <div>
-
-      <button className="btn bg-light text-primary my-3"
-              onClick={(cl) => window.location.pathname = './adminpage.html'}>To admin (TEST)</button>
-
       <BodyContent 
                    id={"courses"} 
                    header={"Courses"}

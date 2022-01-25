@@ -7,7 +7,7 @@ const SET_OUT = "SET_LOGOUT_LISTENER";
 const CLEAR = "CLEAR_LOGIN_LISTENER";
 
 var USERNAME, USERROLE;
-var mainNavRef, footerNavRef, navDrawerRef, reusableButton;
+var mainNavRef, footerNavRef, navDrawerRef, reusableButton, authorizationObject;
 
 
 function adjustments(task){
@@ -38,12 +38,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
         // // The Firebase SDK is initialized and available here!
          firebase.auth().onAuthStateChanged(user => {
-          console.log(user);
+          //console.log(user);
           if(user){     //Signed in.  Load Logged in page
              USERNAME = user.displayName;
+
              navDrawerRef.style.display = 'block';
              mainNavRef.style.display = 'block';
-             footerNavRef.style.display = 'block'; //Hide main navigation.
+             footerNavRef.style.display = 'block'; //Show main navigation.
              
              setLoginListerners(CLEAR, reusableButton);
              setLoginListerners(SET_OUT, reusableButton);
@@ -117,7 +118,54 @@ async function tidyNavDrawer(){
         const navList = document.querySelector('#navbarNavChild')
         navList.setAttribute('class', 'navbar-nav nav-pills flex-column  mb-auto bg-dark');
         navList.children[4].children[0].innerHTML = "My courses";
+  }else if(USERROLE == "Admin"){
+           if(window.location.pathname != '/adminpage.html') window.location.pathname = './adminpage.html'; //Ensures an admin is redirected to the admin UI.
+           else if(window.location.pathname == "/adminpage.html"){
+                  document.querySelector('#navDrawer').setAttribute('class', 'bg-info sticky-top');
+                  document.querySelector('#navbarNav').setAttribute('class', 'collapse navbar-collapse bg-info text-light');
+
+                  const navList = document.querySelector('#navbarNavChild')
+                  navList.setAttribute('class', 'navbar-nav nav-pills flex-column  mb-auto bg-info');
+
+                  await firebase.database().ref('/ulearnData/appData/currators/' + USERNAME + '/').once('value').then(async function(aUid){
+                      if(firebase.auth().currentUser.uid != aUid.val()) { //if the user is not the super admin.
+                            navList.children[5].style.display = 'none'; 
+                            //Check if the user has been approved;
+                            await firebase.database().ref('/ulearnData/userData/Admins/applications/' + USERNAME + '/').once('value').then(function(returningStatus){
+                                const theStatus = returningStatus.val();
+                                authorizationObject = new AuthorizationData(theStatus.statusDate, theStatus.authorizationStatus);
+                            });
+                      }else{
+                          authorizationObject = new AuthorizationData("nill", "enabled");
+                      }
+                  });
+                  adminNavSelections(document.getElementById('defaultClick'));
+           }
   }
 
-  NavSelections(document.getElementById('defaultClick')); //Handle Logged out case.
+  if(USERROLE != "Admin"){
+       await firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/applications/' + USERNAME + '/authorizationStatus/').once('value').then(function(returningStatus){
+          authorizationObject = new AuthorizationData("epoch", returningStatus.val());
+          NavSelections(document.getElementById('defaultClick')); //Handle Logged out case.
+       });
+  }
+}
+
+
+class AuthorizationData{ //Convert to a singleton.
+    #authorization_Status;
+    authorizationTimestamp;
+
+    constructor(authori_Timestamp, authori_Status){
+        this.authorizationTimestamp = authori_Timestamp;
+        this.#authorization_Status = authori_Status;
+    }
+    
+    getStatus(){
+        return this.#authorization_Status;
+    }
+
+    getStatusDate(){
+        return this.authorizationTimestamp;
+    }
 }

@@ -19,32 +19,44 @@ class CardColumn extends React.Component{
      if(this.props.dataCollection.creator == USERNAME){
            returnElement = <div className="d-flex justify-content-between align-items-center mb-2 mx-2">
                             <small className=" ms-2 text-primary">Yours</small> {/*Use it to show the number of students who added the course to their course list*/}
-                            <small className="text-muted">{this.props.cardSmallDetail + " lectures"}</small>
+                            <small className="text-muted">{this.props.cardSmallDetail + " lecture(s)"}</small>
                            </div>
-     }else {
+     }else{
           if(USERROLE == "Student" && !hasAdded(this.props.dataCollection.courseTitle + "_" + this.props.dataCollection.creator)){ //and student has not previously added the course.
              returnElement = <div className="d-flex justify-content-between align-items-center mb-2 mx-2">
-                           <button id={this.props.cardTitle + "_addBtn"} onClick={(w) => this.addcourseToList(w)} className="btn btn-sm btn-outline-secondary">Add</button>
-                           <small className="text-muted">{this.props.cardSmallDetail + " lectures"}</small>
-                          </div>
-          }else { //Removed the if  if(USERROLE == "Tutor")
+                              <button id={this.props.cardTitle + "_addBtn"} onClick={(w) => this.addcourseToList(w)} className="btn btn-sm btn-outline-secondary">Add</button>
+                              <small className="text-muted">{this.props.cardSmallDetail + " lecture(s)"}</small>
+                             </div>
+          }else if(USERROLE == "Tutor" || !(USERROLE == "Student" && !hasAdded(this.props.dataCollection.courseTitle + "_" + this.props.dataCollection.creator))){
              returnElement = <div className="d-flex justify-content-between align-items-center mb-2 mx-2">
-                           <button id={this.props.cardTitle + "_addBtn"} disabled="disabled" className="btn btn-sm btn-outline-secondary">Add</button>
-                           <small className="text-muted">{this.props.cardSmallDetail + " lecture(s)"}</small>
-                          </div>
+                              <button id={this.props.cardTitle + "_addBtn"} disabled="disabled" className="btn btn-sm btn-outline-secondary">Add</button>
+                              <small className="text-muted">{this.props.cardSmallDetail + " lecture(s)"}</small>
+                             </div>
+          }else if(USERROLE == "Admin"){
+             var showEnStatus = "";
+             if(this.props.dataCollection.courseVisibility == "enabled") showEnStatus = <button id={this.props.cardTitle + "_addBtn"} disabled="disabled" className="btn btn-sm btn-outline-secondary">EN</button>
+             returnElement = <div className="d-flex justify-content-between align-items-center mb-2 mx-2">
+                              {showEnStatus}
+                              <small className="text-muted">{this.props.cardSmallDetail + " lecture(s)"}</small>
+                             </div>
           }
      }
      return returnElement;
+   }
+
+   whatToRender(){
+      if(USERROLE == "Admin") ReactDOM.render(<LectureControlDiv populateCourseWith={this.props.dataCollection}/>, bodyContainer);
+      else ReactDOM.render(<LectureViewDiv populateCourseWith={this.props.dataCollection}/>, bodyContainer);
    }
 
    render() {
      return (
        <div className="col">
         <div className="card shadow-sm">
-         <div onClick={(t) => ReactDOM.render(<LectureViewDiv populateCourseWith={this.props.dataCollection}/>, bodyContainer)}>  
+         <div onClick={(t) => this.whatToRender()}>  
 
-  {/*    <PrepImage iUrl={this.props.cardImage}
-                    cTitle={this.props.cardTitle}/>  */}
+      <PrepImage iUrl={this.props.cardImage}
+                    cTitle={this.props.cardTitle}/>
 
           <div className="card-body">
            <h3 className="card-title display-6">{this.props.cardTitle}</h3>

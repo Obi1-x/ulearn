@@ -5,8 +5,25 @@ var authUI = document.getElementById('authenticate');
 var roleUI = document.getElementById('roleSelect');
 var roleHeader = document.getElementById('roleheader');
 var roleContainer = document.getElementById('roleS1');
+var adminApplyBtn = document.getElementById('adminApply');
 var submitRoleBtn = document.getElementById('submitRole');
-var becomeAdminBtn = document.getElementById('adminApply');
+
+function firstFunction(userName){
+    selectedRole = "Student";
+    if(userName == null){
+       roleHeader.style.display = 'none';
+       roleContainer.style.display = 'none';
+       adminApplyBtn.style.display = 'none';
+       submitRoleBtn.style.display = 'none';
+       roleUI.style.display = 'none';
+    }else{
+       roleUI.style.display = 'block';
+       adminApplyBtn.style.display = 'block';
+       submitRoleBtn.style.display = 'block';
+       roleContainer.style.display = 'block';
+       roleHeader.style.display = 'block';
+    }
+}
 
 firstFunction(user_name);
 
@@ -38,7 +55,7 @@ function UIconfig(){
       if(firstSign){
          toRoleSelect();
       }else if(!firstSign){
-          window.location.pathname = './index.html';
+          toUISelect();
       }
 
       //alert("Welcome to ULearn! Please choose a role.");
@@ -61,21 +78,6 @@ function UIconfig(){
   // Privacy policy url.
   privacyPolicyUrl: '<your-privacy-policy-url>'
 }
-}
-
-function firstFunction(userName){
-    selectedRole = "Student";
-    if(userName == null){
-       roleHeader.style.display = 'none';
-       roleContainer.style.display = 'none';
-       submitRoleBtn.style.display = 'none';
-       roleUI.style.display = 'none';
-    }else{
-       roleUI.style.display = 'block';
-       submitRoleBtn.style.display = 'block';
-       roleContainer.style.display = 'block';
-       roleHeader.style.display = 'block';
-    }
 }
 
     const loadEl = document.querySelector('#load');
@@ -125,23 +127,49 @@ function toRoleSelect(){
   authUI.style.display = 'none';
 
   submitRoleBtn.addEventListener('click', (e) => {
-     submitAction();
-     alert("Welcome to ULearn");
-     window.location.pathname = './index.html';
+     if(selectedRole != null) {
+        firebase.database().ref('/ulearnData/userData/' + selectedRole + 's/applications/' + user_name + '/authorizationStatus/').set("enabled", (failedApplyi) => {
+            if(failedApplyi) console.log("error at " +selectedRole+ " application");
+        }); //enabled by default.
+
+        firebase.database().ref('/ulearnData/userData/roles/' + user_name + '/').set(selectedRole, (failedRole) => {
+             if(failedRole) console.log("error at role assignment")
+             else if(!failedRole){
+                     alert("Welcome to ULearn");
+                     window.location.pathname = './index.html';
+             }
+            });
+      }
   });
 
-  becomeAdminBtn.addEventListener('click'), (ad) => {
+  adminApplyBtn.addEventListener('click', (ad) => {
      selectedRole = "Admin";
-     submitAction();
-     alert("You will be redirected to the admin page");
-     //window.location.pathname = './adminpage.html';
-  }
+
+     var adminApplication = {
+                             "authorizationStatus" : "disabled",
+                             "statusDate" : new Date().getTime()
+                            } //disabled by default
+
+     firebase.database().ref('/ulearnData/userData/roles/' + user_name + '/').set(selectedRole, (failedRoleAd) => {
+             if(failedRoleAd) console.log("error at role assignment")
+             else if(!failedRoleAd){
+                  firebase.database().ref('/ulearnData/userData/' + selectedRole + 's/applications/' + user_name + '/').set(adminApplication, (applyFailed) => {
+                    if(!applyFailed){
+                        alert("You will be redirected to the admin page");
+                        window.location.pathname = './adminpage.html';
+                    }else if(applyFailed) console.log("Admin application failed");
+                  });
+             }
+            });
+  });
 }
 
-async function submitAction(){
-     var newBucket = {
-                      "status" : "online"
-                     }
-     await firebase.database().ref('/ulearnData/userData/' + selectedRole + 's/' + user_name + '/').set(newBucket);
-     await firebase.database().ref('/ulearnData/userData/roles/' + user_name + '/').set(selectedRole);
+async function toUISelect(){
+    await firebase.database()
+                  .ref('/ulearnData/userData/roles/' + user_name + '/')
+                  .once('value')
+                  .then(function(checkedRole){
+                          if(checkedRole.val() == "Admin") window.location.pathname = './adminpage.html';
+                          else window.location.pathname = './index.html';
+                        });
 }

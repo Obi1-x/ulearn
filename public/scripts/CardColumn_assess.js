@@ -38,6 +38,12 @@ class CardColumnAssess extends React.Component{
      return returnElement;
    }*/
 
+   priorDisable(){
+      var whatToReturn = "";
+      if(USERROLE == "Admin" && this.props.quizData.visibilityStatus == "disabled") whatToReturn = <small className="ms-2 text-danger">disabled</small>
+      return whatToReturn;
+   }
+
    render() {
      return (
        <div className="col">
@@ -51,8 +57,10 @@ class CardColumnAssess extends React.Component{
            <h3 className="card-title display-6">{this.props.quizData.assessmentTitle}</h3>
            <p className="card-text">{this.props.quizData.assessmentDescription}</p>
           </div>
+
          </div>
 
+         {this.priorDisable()}
          {/*this.checkCreator()*/}
 
         </div>

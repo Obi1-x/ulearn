@@ -19,6 +19,7 @@ class CourseInfo{
 	this.courseTitle = title;
     this.courseDescription = decrip;
     this.courseImageUrl = "nullImage";
+    this.courseVisibility = "enabled";
     this.creator = USERNAME;
     this.lectureCount = "empty";
     this.created = new Date().getTime(); 
@@ -47,6 +48,7 @@ class Assessment{
      this.courseRefs = "null";
      this.assessmentLink = "null";
      //this.interations;
+     this.visibilityStatus = "enabled";
    }
 }
 
@@ -56,7 +58,8 @@ function NavSelections(clicked){
   clicked.className = 'nav-link active';
   previousClick = clicked;
 
-  switch(clicked.innerHTML){
+  if(authorizationObject.getStatus() == "enabled"){
+      switch(clicked.innerHTML){
         case "Home": if(USERROLE == "Student") {//Get courseList
                         firebase.database().ref('/ulearnData/userData/Students/' + USERNAME + '/courseList/').once('value').then(function(stuCouList){
                           studentCourseList = stuCouList.val();
@@ -73,7 +76,9 @@ function NavSelections(clicked){
                              .ref('/ulearnData/appData/courses/')
                              .orderByChild('indexWithCreated')
                              .on('child_added', function(cData){ //Should filter 20 at a time.
-                                 coursesValuesArray.push(cData.val());
+                                 if(cData.val().courseVisibility == "enabled")coursesValuesArray.push(cData.val());
+                                 else if(cData.val().courseVisibility == "disabled") numOfCourses--;
+
                                  if(coursesValuesArray.length == numOfCourses) renderedBodyContainer = ReactDOM.render(<HomeDiv courseValueData={coursesValuesArray} />, bodyContainer); 
                              });
                          });
@@ -99,19 +104,22 @@ function NavSelections(clicked){
                             if(USERROLE == "Tutor") whichRef = '/ulearnData/appData/assessments/' + USERNAME + '/';
 
                             firebase.database().ref(whichRef).once('value').then(function(allAssessments){
-                               Object.values(allAssessments.val()).forEach(assesParent => {
-                                  if(USERROLE == "Tutor"){
-                                     Object.values(assesParent).forEach(asses => {
-                                      assessmentArray.push(asses);
-                                     });
-                                  }else assessmentArray.push(assesParent);
-                               });
+                               if(allAssessments.val() != null){
+                                    Object.values(allAssessments.val()).forEach(assesParent => { //Noticed an error here.
+                                     if(USERROLE == "Tutor"){
+                                        Object.values(assesParent).forEach(asses => {
+                                         if(asses.visibilityStatus == "enabled") assessmentArray.push(asses); //blocks disabled contents
+                                        });
+                                     }else if(assesParent.visibilityStatus == "enabled") assessmentArray.push(assesParent);
+                                    });
                                RequiredAssements = assessmentArray;
                                RequiredAssementsKeys = Object.keys(allAssessments.val());
+                               }
                                ReactDOM.render(<AssessmentsDiv groupedssment={assessmentArray} miscData={RequiredAssementsKeys} />, bodyContainer); 
                             });
              break;
-  }
+      }
+  }else if(authorizationObject.getStatus() == "disabled") ReactDOM.render(<h2> Access restricted </h2>, bodyContainer);
 
   const maxImgWidth = 800;
   var imgWidth = document.querySelector('html').clientWidth;

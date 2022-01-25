@@ -18,15 +18,14 @@
       </a>
 
       <ul class="nav nav-pills">
-      <!--
+      
       <div id="mainNav">
         <li class="nav-item d-flex flex-row">
          <a href="#courses" class="nav-link px-2 text-muted">Courses</a>
-         <a href="#tutors" class="nav-link px-2 text-muted">Lectures</a>
-         <a href="#library" class="nav-link px-2 text-muted">Assessments</a>
+         <a href="#assessments" class="nav-link px-2 text-muted">Assessments</a>
         </li>
       </div>
-      -->
+      
         
        <li class="nav-item mx-3"><button id="goingIn">Sign in</button></li>
       </ul>
@@ -56,25 +55,25 @@
       <li class="d-flex flex-xl-column align-items-xl-center flex-sm-row mt-2">
        <img id="prpic" class="img-responsive rounded-circle img-thumbnail mt-xl-3" src="./blank_pic.png" style="width: 50%"></img>
        <a href="/profile_settings.html" class="text-light align-self-sm-end align-self-xl-center text-decoration-none"><h4 id="nav_uname">Username</h4></a>
-       <text id="nav_role" class="text-light align-self-xl-center align-self-sm-end ms-2 mb-2">Role</text>
+       <text id="nav_role" class="text-light align-self-xl-center align-self-sm-end ms-2 mb-2">Admin</text>
       </li>
 
-      <hr id="who_is_active" class="bg-light" activated="home"/> <!--Might remove activated-->
+      <hr id="who_is_active" class="bg-light" activated="content"/> <!--Might remove activated-->
 
       <li class="nav-item"> <!-- SVG or img Icon before text -->
-        <a onclick="NavSelections(this);" id="defaultClick" href="#" class="nav-link active" aria-current="page">Content</a>
+        <a onclick="adminNavSelections(this);" id="defaultClick" href="#" class="nav-link active" aria-current="page">Content</a>
       </li>
 
       <li class="nav-item">
-        <a onclick="NavSelections(this);" href="#"  class="nav-link">Tutors</a>
+        <a onclick="adminNavSelections(this);" href="#"  class="nav-link">Tutors</a>
       </li>
 
       <li class="nav-item">
-        <a onclick="NavSelections(this);" href="#" class="nav-link">Students</a>
+        <a onclick="adminNavSelections(this);" href="#" class="nav-link">Students</a>
       </li>
 
       <li class="nav-item">
-        <a onclick="NavSelections(this);" href="#" class="nav-link">Admins</a>
+        <a onclick="adminNavSelections(this);" href="#" class="nav-link">Admins</a>
       </li>
 
       <li class="nav-item">
@@ -106,12 +105,8 @@
     </a>
 
     <ul id="footerNav" class="nav d-flex flex-row justify-content-end">
-      <li class="nav-item"><a href="#lectures" class="nav-link px-2 text-muted">Courses</a></li>
-      <li class="nav-item"><a href="#tutors" class="nav-link px-2 text-muted">Tutors</a></li>
-      <li class="nav-item"><a href="#library" class="nav-link px-2 text-muted">Library</a></li><!--
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li> 
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
-      <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li> -->
+      <li class="nav-item"><a href="#courses" class="nav-link px-2 text-muted">Courses</a></li>
+      <li class="nav-item"><a href="#assessments" class="nav-link px-2 text-muted">Assessments</a></li>
      </ul>
   </footer>
    
@@ -124,22 +119,20 @@
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <!-- Loads React component. -->
-    <script type="text/babel" src="scripts/offline_elements.js"></script>
-    <script type="text/babel" src="scripts/ulearn_functions.js"></script>
 
-    <script type="text/babel" src="scripts/HomeDiv.js"></script>
-    <script type="text/babel" src="scripts/BodyContent.js"></script>
+    <script type="text/babel" src="scripts/AdminViewDiv.js"></script>
+    <script type="text/babel" src="scripts/StudentTutorViewDiv.js"></script>
+    <script type="text/babel" src="scripts/admin_functions.js"></script>
+
+    <script type="text/babel" src="scripts/ContentDivs.js"></script>
     <script type="text/babel" src="scripts/CardColumn.js"></script>
     <script type="text/babel" src="scripts/CardColumn_assess.js"></script>
+    <script type="text/babel" src="scripts/LectureControlDiv.js"></script>
+    <script type="text/babel" src="scripts/AssessmentViewDiv.js"></script>
     <script type="text/babel" src="scripts/PrepImage.js"></script>
 
-    <script type="text/babel" src="scripts/LecturesDiv.js"></script>
-    <script type="text/babel" src="scripts/LectureBuildDiv.js"></script>
-    <script type="text/babel" src="scripts/LectureViewDiv.js"></script>
-
-    <script type="text/babel" src="scripts/AssessmentsDiv.js"></script>
-    <script type="text/babel" src="scripts/AssessmentBuildDiv.js"></script>
-    <script type="text/babel" src="scripts/AssessmentViewDiv.js"></script>
+    <!--
+    <script type="text/babel" src="scripts/offline_elements.js"></script> -->
 
   </body>
 </html>
