@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Video Lecture</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <!--<script type="module" src='scripts/carryFirebase.js'></script> -->
+
+    <!--IFrame video call-->
+    <script src="https://meet.jit.si/external_api.js"></script>
+
+    <!--Recorder -->
+    <script src="https://www.webRTC-Experiment.com/RecordRTC.js"></script>
+
+    <!--Recorder -->
+    <script src="https://www.webrtc-experiment.com/screenshot.js"></script>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
+   </head>
+
+
+
+<body>
+    <header class="d-flex flex-wrap py-3 border-bottom">
+      <a href="#" class="d-flex navbar-brand ms-2 mb-3 mb-md-0 me-md-auto text-dark">
+         <img src="./graduate_cap.png" alt="Ulearn logo" width="30" height="24">
+         ULearn lecture
+      </a>
+
+      <!--
+      <ul class="nav nav-pills">
+      <div id="mainNav">
+        <li class="nav-item d-flex flex-row">
+         <a href="#courses" class="nav-link px-2 text-muted">Settings</a>
+        </li>
+       </div>
+      </ul> -->
+
+    </header>
+
+
+
+
+
+  <div id="video_body" class="container-fluid py-3 bg-light">
+    <h1 id="courseTi" class="display-2">Course title</h1>
+    <h2 id="l_T" class="ms-2">Lecture title Title</h2>
+    <h5 id="l_D" class="ms-3 text-secondary">Lecture description</h4>
+
+   <!--
+   <div class="d-flex flex-row">
+    <button id="toStartVid" class="btn btn-outline-success" type="submit">Start Streaming</button> 
+    <button id="toRecordVid" class="btn btn-outline-danger" type="submit">Start recording</button>
+    <button id="toStop" onclick="stopAll()" class="btn btn-outline-danger" type="submit">Stop</button>
+   </div> -->
+
+   <div id="videoB" width="1280" height="720"></div>
+   
+   <video id="testVid" width="800" height="700" autoplay>
+    <!-- <source src="./vlc-record-2021-07-04-21h54m18s-The.Book.of.Life.2014.720p.BluRay.x264.YIFY.mp4-.mp4" type="video/mp4"> -->
+    Your browser does not support the video tag.
+   </video>
+
+   <canvas id="activeCanvas" width="800" height="700"></canvas>
+   <script type="text/javascript" src='scripts/VideoConferencing.js'></script>
+  </div>
+
+   
+
+
+
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 border-top">
+     <p class="col-md-4 mb-0 text-muted">&copy; 2021 ULearn, Inc</p>
+
+    <a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+      <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+    </a>
+
+    <ul id="footerNav" class="nav d-flex flex-row justify-content-end">
+      <li class="nav-item"><a href="#lectures" class="nav-link px-2 text-muted">Courses</a></li>
+      <li class="nav-item"><a href="#tutors" class="nav-link px-2 text-muted">Tutors</a></li>
+      <li class="nav-item"><a href="#library" class="nav-link px-2 text-muted">Library</a></li>
+     </ul>
+  </footer>
+   
+  
+    <!--<script type="text/javascript" src='scripts/inits_auth_etc.js'></script> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    -->
+
+    <!-- Note: when deploying, replace "development.js" with "production.min.js".-->
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <!--
+    <!-- Loads React component. 
+    <script type="text/babel" src="scripts/ulearn_functions.js"></script>-->
+
+  </body>
+</html>

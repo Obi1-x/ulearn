@@ -20,11 +20,34 @@ class LectureViewDiv extends React.Component{
     firebase.database().ref(courseInteractionRef + '/').set(timeStamp);
    }
 
+  startVidLecture(){
+     window.location.pathname = './videoClass.html';
+  }
 
-  liveMediaButton(lecture_Index){
+  liveMediaButton(lectureFields, thisCourseTitle){
      var liveButton;
      if(USERROLE == "Tutor"){
-        liveButton = <button id={"streamBtn_" + lecture_Index} className="btn-sm btn-outline-primary me-2" type="submit" onClick={(livLec) => alert("Creating live lecture")}>Create live lecture</button>
+
+       {/* liveButton = <a id={"streamBtn_" + lectureFields.lectureIndex}
+                        href="./videoClass.html"
+                        target="_blank"
+                        rel="noopener noreferrer">
+                      Create live lecture
+                     </a> */}
+
+       liveButton = <button id={"streamBtn_" + lectureFields.lectureIndex}
+                            className="btn-sm btn-outline-primary me-2" type="submit"
+                            onClick={(livLec) => {
+                                                  localStorage.setItem("Live_course_title", thisCourseTitle);
+                                                  localStorage.setItem("Live_lecture_title", lectureFields.lectureTopic);
+                                                  localStorage.setItem("Live_lecture_desc", lectureFields.lectureDescription);
+                                                  localStorage.setItem("Attending_name", USERNAME);
+                                                  localStorage.setItem("Attending_role", USERROLE);
+                                                  var portal = window.open("./videoClass.html", "_blank");
+                                                 }} 
+                            rel="noopener noreferrer">
+                     Create live lecture
+                    </button>
      }
      return liveButton;
   }
@@ -171,7 +194,7 @@ class LectureViewDiv extends React.Component{
           
             <div className="navbar-collapse collapse" id={"navContent_" + lec.lectureIndex}>
              <div>
-              {classClone.liveMediaButton(lec.lectureIndex)}
+              {classClone.liveMediaButton(lec, PopulateAfterReturn.courseTitle)}
               {classClone.handleAttachments(lec.lectureMediaFileUrl, lec.lectureIndex)}
              </div>
              <p> {lec.lecContentText} </p>
@@ -221,8 +244,9 @@ class LectureViewDiv extends React.Component{
 
        
         <div className="col-3">
+        {/*
         <PrepImage iUrl={this.props.populateCourseWith.courseImageUrl}
-                      cTitle={this.props.populateCourseWith.courseTitle}/>
+                      cTitle={this.props.populateCourseWith.courseTitle}/> */}
         </div>
 
         <div className="col-9 d-flex flex-column">

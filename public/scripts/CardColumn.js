@@ -55,8 +55,8 @@ class CardColumn extends React.Component{
         <div className="card shadow-sm">
          <div onClick={(t) => this.whatToRender()}>  
 
-      <PrepImage iUrl={this.props.cardImage}
-                    cTitle={this.props.cardTitle}/>
+     {/* <PrepImage iUrl={this.props.cardImage}
+                    cTitle={this.props.cardTitle}/>*/}
 
           <div className="card-body">
            <h3 className="card-title display-6">{this.props.cardTitle}</h3>

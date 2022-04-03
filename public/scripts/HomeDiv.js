@@ -24,7 +24,13 @@ class HomeDiv extends React.Component {
                    id={"tutors"} 
                    header={"Tutors"}
                    itemValues = {this.props.courseValueData}
-                   forWho = "others"/> */}
+                   forWho = "others"/>
+
+      <BodyContent 
+                   id={"library"} 
+                   header={"Library"}
+                   itemValues = {this.props.courseValueData}
+                   forWho = "libs"/>*/}
      </div>
     );
   }
