@@ -9,15 +9,6 @@
 
     <!--IFrame video call-->
     <script src="https://meet.jit.si/external_api.js"></script>
-
-    <!--Recorder -->
-    <script src="https://www.webRTC-Experiment.com/RecordRTC.js"></script>
-
-    <!--Recorder -->
-    <script src="https://www.webrtc-experiment.com/screenshot.js"></script>
-
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
-
    </head>
 
 
@@ -25,9 +16,13 @@
 <body>
     <header class="d-flex flex-wrap py-3 border-bottom">
       <a href="#" class="d-flex navbar-brand ms-2 mb-3 mb-md-0 me-md-auto text-dark">
-         <img src="./graduate_cap.png" alt="Ulearn logo" width="30" height="24">
-         ULearn lecture
+         <div class="d-flex flex-column">
+         <h2 id="l_T" class="ms-1 display-6">Lecture title Title</h2>
+         <h5 id="l_D" class="d-flex ms-2 text-secondary">Lecture description</h4>
+         </div>
       </a>
+
+      
 
       <!--
       <ul class="nav nav-pills">
@@ -42,31 +37,15 @@
 
 
 
-
-
+  <div id="videoB" class="container-fluid" width="1280" height="1080"></div>
   <div id="video_body" class="container-fluid py-3 bg-light">
-    <h1 id="courseTi" class="display-2">Course title</h1>
-    <h2 id="l_T" class="ms-2">Lecture title Title</h2>
-    <h5 id="l_D" class="ms-3 text-secondary">Lecture description</h4>
-
-   <!--
-   <div class="d-flex flex-row">
-    <button id="toStartVid" class="btn btn-outline-success" type="submit">Start Streaming</button> 
-    <button id="toRecordVid" class="btn btn-outline-danger" type="submit">Start recording</button>
-    <button id="toStop" onclick="stopAll()" class="btn btn-outline-danger" type="submit">Stop</button>
-   </div> -->
-
-   <div id="videoB" width="1280" height="720"></div>
-   
-   <video id="testVid" width="800" height="700" autoplay>
-    <!-- <source src="./vlc-record-2021-07-04-21h54m18s-The.Book.of.Life.2014.720p.BluRay.x264.YIFY.mp4-.mp4" type="video/mp4"> -->
+   <video id="testVid" width="1280" height="720" autoplay>
     Your browser does not support the video tag.
    </video>
-
-   <canvas id="activeCanvas" width="800" height="700"></canvas>
-   <script type="text/javascript" src='scripts/VideoConferencing.js'></script>
+   <canvas id="activeCanvas" width="1280" height="720"></canvas>
   </div>
 
+  <script type="text/javascript" src='scripts/VideoConferencing.js'></script>
    
 
 

@@ -1,10 +1,24 @@
 'use strict';
 
-var PopulateAfterReturn;
+var PopulateAfterReturn, lecturesObjectArray, mountedState;
 
 class LectureViewDiv extends React.Component{
   constructor(props) {
       super(props);
+      this.state = {
+                    lectureUpdate: false,
+                    liveUrlUpdate: false
+                   };
+      this.linkToLecture = null;
+
+      this.anAttendance = null;
+      this.aVidLecture = null;
+      this.vidFileName = null;
+      this.lecRefIndex = null;
+  }
+
+  componentDidMount(){
+   mountedState = this;
   }
 
   addcourse_ToList(clickarg){
@@ -20,24 +34,134 @@ class LectureViewDiv extends React.Component{
     firebase.database().ref(courseInteractionRef + '/').set(timeStamp);
    }
 
-  startVidLecture(){
-     window.location.pathname = './videoClass.html';
+  addLiveLectureVid(theLecture, courseT){ //Later change mp4 to webm
+        var liveLecVidNDetails;
+        const classVidDir = '/ulearnData/lectures/' + courseT + '_' + theLecture.lectureTopic + '/' + this.vidFileName + ".mp4";
+        const classUrlDir = '/ulearnData/appData/lectures/' + this.props.populateCourseWith.courseTitle + '_' + this.props.populateCourseWith.creator + '/' + theLecture.lectureTopic + '_' + this.props.populateCourseWith.courseTitle + '_' + this.props.populateCourseWith.creator;
+        
+        if(this.state.lectureUpdate && this.lecRefIndex == theLecture.lectureIndex && this.aVidLecture != null){
+            //UPLOAD VIDEO LECTURE.
+            var finishedLiveLecture = new File(this.aVidLecture, this.vidFileName, {type: "video/mp4"});
+            liveLecVidNDetails = this.buildTheVideoHtml(theLecture, "null");
+            var uploadStream = firebase.storage().ref(classVidDir).put(finishedLiveLecture);
+            uploadStream.on(firebase.storage.TaskEvent.STATE_CHANGED, (snapshot) => {
+                                                         console.log(snapshot.state);
+                                                         },
+                                                         (error) => {
+                                                          // Handle unsuccessful uploads
+                                                          console.log(error);
+                                                          console.log("Upload unsuccessful");
+                                                          }, 
+                                                         (complete) => {
+                                                          // Handle successful uploads on complete.
+                                                          console.log("Upload successful");
+                                                          firebase.storage().ref(classVidDir).getDownloadURL().then((downloadURL) => {
+                                                            firebase.database().ref(classUrlDir + "/lectureVidUrl/").set(downloadURL);
+                                                            var vidWindow = document.getElementById("liveLecDiv_" + theLecture.lectureIndex);
+                                                            var theHtmlVid = vidWindow.children[0];
+                                                            theHtmlVid.children[0].src = downloadURL;
+                                                            theHtmlVid.load();
+                                                          });
+                                                          //Remove live lecture link from DB.
+                                                          firebase.database().ref(classUrlDir + "/lectureLink/").remove();
+                                                          uploadStream.off();
+                                                         }
+                                                       );
+
+
+
+            //Upload Attendance.
+            if(this.anAttendance != null){
+               console.log("Uploading attendance")
+               firebase.database().ref(classUrlDir + "/lectureVidAttendance/").set(this.anAttendance, (error)=>{
+                                                                    if(!error){
+                                                                       console.log("Attendance uploaded");
+                                                                       //Build and display the attendance.
+                                                                       //var attendList = document.getElementById("liveLecAttend_" + theLecture.lectureIndex);
+                                                                    }else console.log("Failed to upload attendance");
+                                                                                                 });
+            }
+            
+            this.state.lectureUpdate = false; //return to default
+            this.aVidLecture = null;
+            this.vidFileName = null;
+            this.anAttendance = null;
+            this.lecRefIndex = null;
+        }else if(this.state.liveUrlUpdate && this.lecRefIndex == theLecture.lectureIndex && this.linkToLecture != null){
+        console.log(this.linkToLecture);
+            //Upload link to DB
+            firebase.database().ref(classUrlDir + "/lectureLink/").set(this.linkToLecture, (error) => {
+                                                                    if(error){
+                                                                       console.log("Lecture link upload failed");
+                                                                       //Retry
+                                                                    }else if(!error){
+                                                                       console.log("Lecture link uploaded");
+                                                                       this.linkToLecture = null;
+                                                                       this.lecRefIndex = null;
+                                                                    }
+                                                                                           });
+            
+            this.state.liveUrlUpdate = false;
+        }else{
+           if(theLecture.lectureVidUrl != null && theLecture.lectureLink == null) liveLecVidNDetails = this.buildTheVideoHtml(theLecture, theLecture.lectureVidUrl);
+           else if(theLecture.lectureVidUrl == null && theLecture.lectureLink != null){
+            //Update UI with link.
+            liveLecVidNDetails = <a id={"anchorLink_ " + theLecture.lectureIndex}
+                                    href={theLecture.lectureLink}
+                                   >
+                                 Click to join ongoing lecture
+                                 </a>
+           }
+        }
+        return liveLecVidNDetails;
+  }
+
+  buildTheVideoHtml(theLecture2, theSource){
+     var vidBuilder, holdAttendanceList, rawAttendanceList, uploadingPane;
+
+     if(theLecture2.lectureVidAttendance != null){
+        holdAttendanceList = Object.values(theLecture2.lectureVidAttendance);
+        rawAttendanceList = holdAttendanceList.map((attendee) => <h6 key={"attendeeKey_" + attendee.attendantId}
+                                                                     id={"attendeeId_" + attendee.attendantId}
+                                                                     >
+                                                                  {attendee.displayName + ':  ' + attendee.attendingTime}
+                                                                 </h6>);
+     }
+     
+     if(theSource == null) uploadingPane = <h4>Uploading...</h4>
+     else uploadingPane = "";
+
+     vidBuilder = <div id={"liveLecDiv_" + theLecture2.lectureIndex}
+                    className="d-flex flew-row">
+                   <video id={"video_" + theLecture2.lectureIndex}
+                       width="450"
+                       height="350"
+                       controls>
+                    <source src={theSource}
+                         type="video/mp4"/>
+                    Your browser does not support the video tag.
+                    {uploadingPane}
+                   </video>
+
+                   <div id={"liveLecAttend_" + theLecture2.lectureIndex}
+                        className="ms-4">
+                    <h5>Attendance (1 hour after launch)</h5>
+                    <h6>Username             Entrytime</h6>
+                    {rawAttendanceList}
+                   </div>
+
+               </div>
+               //Replace div with iFrame above, to make the attendance scrollable.
+     return vidBuilder;
   }
 
   liveMediaButton(lectureFields, thisCourseTitle){
      var liveButton;
-     if(USERROLE == "Tutor"){
-
-       {/* liveButton = <a id={"streamBtn_" + lectureFields.lectureIndex}
-                        href="./videoClass.html"
-                        target="_blank"
-                        rel="noopener noreferrer">
-                      Create live lecture
-                     </a> */}
-
+     if(USERROLE == "Tutor" && this.props.populateCourseWith.creator == USERNAME && lectureFields.lectureVidUrl == null){ //Only 1 live lecture can be created per lecture for now.
        liveButton = <button id={"streamBtn_" + lectureFields.lectureIndex}
                             className="btn-sm btn-outline-primary me-2" type="submit"
                             onClick={(livLec) => {
+                                                  localStorage.setItem("Live_lecture_index", lectureFields.lectureIndex);
                                                   localStorage.setItem("Live_course_title", thisCourseTitle);
                                                   localStorage.setItem("Live_lecture_title", lectureFields.lectureTopic);
                                                   localStorage.setItem("Live_lecture_desc", lectureFields.lectureDescription);
@@ -164,10 +288,10 @@ class LectureViewDiv extends React.Component{
 
    render(){
    var lectureContent;
-   var classClone = new LectureViewDiv();
+   var classClone = this;  //new LectureViewDiv();
    PopulateAfterReturn = this.props.populateCourseWith;
    var numOfLectures = this.props.populateCourseWith.lectureCount;
-   var lecturesObjectArray = new Array();
+   lecturesObjectArray = new Array();
 
     this.fetchLectures().then(async function(lecFetched){
       await lecFetched.on('child_added', function(eve){
@@ -197,6 +321,7 @@ class LectureViewDiv extends React.Component{
               {classClone.liveMediaButton(lec, PopulateAfterReturn.courseTitle)}
               {classClone.handleAttachments(lec.lectureMediaFileUrl, lec.lectureIndex)}
              </div>
+             {classClone.addLiveLectureVid(lec, PopulateAfterReturn.courseTitle, lec.lectureTopic)}
              <p> {lec.lecContentText} </p>
             </div>
            
@@ -268,6 +393,7 @@ class LectureViewDiv extends React.Component{
        <hr/>
 
        <div id="allLecList"></div>
+
       </div>
     </div>
      );
