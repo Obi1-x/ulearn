@@ -113,6 +113,13 @@ document.addEventListener('DOMContentLoaded',  async function(r) {
     isRecording = false;
     clearInterval(rollingTape);
     vidCallAPI.dispose();
+
+    localStorage.removeItem("Attending_name");
+    localStorage.removeItem("Attending_role");
+    localStorage.removeItem("Live_course_title");
+    localStorage.removeItem("Live_lecture_title");
+    localStorage.removeItem("Live_lecture_desc");
+    localStorage.removeItem("Live_lecture_index");
     window.close();
   }
 

@@ -89,8 +89,10 @@ function signingOut(et){
    et.stopPropagation();
    console.log("Signing out");
    firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/status/').set("offline", (error) => {
+       localStorage.setItem("FirstAuth", false);
        if(!error) firebase.auth().signOut();
        alert("See you soon!");  //FIND ANOTHER WAY TO INDICATE OFFLINE STATUS.
+       window.location.pathname = './index.html';
    });
 }
 
@@ -105,7 +107,6 @@ async function tidyNavDrawer(){
   //Username and role.
   document.getElementById('nav_uname').innerHTML = USERNAME;
   await firebase.database().ref('/ulearnData/userData/roles/' + USERNAME + '/').once('value').then(function(userRole){
-			   
                USERROLE = userRole.val();
                document.getElementById('nav_role').innerHTML = USERROLE;
                firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/status/').set("online");
@@ -149,6 +150,7 @@ async function tidyNavDrawer(){
           NavSelections(document.getElementById('defaultClick')); //Handle Logged out case.
        });
   }
+  document.body.hidden = false;
 }
 
 

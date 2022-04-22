@@ -31,7 +31,7 @@ class BodyContent extends React.Component{
      var itemCount = this.props.itemValues;
      return (
        <div>
-        <div id={this.props.id} className="container mg-8">
+        <div id={this.props.id} className="mg-8"> {/*Container class was removed from here*/}
          <h4>{this.headerValue(itemCount.length)}</h4>
          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
           

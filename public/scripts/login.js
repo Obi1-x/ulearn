@@ -59,7 +59,7 @@ function UIconfig(){
       }
 
       //alert("Welcome to ULearn! Please choose a role.");
-      return true;
+      return false;
     },
     uiShown: function() {
     console.log("Sign in");
@@ -68,7 +68,7 @@ function UIconfig(){
   },
   // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
   signInFlow: 'popup',
-  //signInSuccessUrl: false,
+  signInSuccessUrl: '',
   signInOptions: [
     firebase.auth.EmailAuthProvider.PROVIDER_ID,
     firebase.auth.GoogleAuthProvider.PROVIDER_ID
@@ -136,6 +136,7 @@ function toRoleSelect(){
              if(failedRole) console.log("error at role assignment")
              else if(!failedRole){
                      alert("Welcome to ULearn");
+                     localStorage.setItem("FirstAuth", true);
                      window.location.pathname = './index.html';
              }
             });
@@ -156,6 +157,7 @@ function toRoleSelect(){
                   firebase.database().ref('/ulearnData/userData/' + selectedRole + 's/applications/' + user_name + '/').set(adminApplication, (applyFailed) => {
                     if(!applyFailed){
                         alert("You will be redirected to the admin page");
+                        localStorage.setItem("FirstAuth", true);
                         window.location.pathname = './adminpage.html';
                     }else if(applyFailed) console.log("Admin application failed");
                   });
@@ -169,6 +171,7 @@ async function toUISelect(){
                   .ref('/ulearnData/userData/roles/' + user_name + '/')
                   .once('value')
                   .then(function(checkedRole){
+                          localStorage.setItem("FirstAuth", true);
                           if(checkedRole.val() == "Admin") window.location.pathname = './adminpage.html';
                           else window.location.pathname = './index.html';
                         });

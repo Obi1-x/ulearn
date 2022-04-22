@@ -51,8 +51,8 @@ class StudentTutorViewDiv extends React.Component{
 
    chooseRole(assignedRole){
        var choosenRole;
-       if(assignedRole == "Tutors") choosenRole = "./lecturer.png";
-       else if(assignedRole == "Students") choosenRole = "./student.png";
+       if(assignedRole == "Tutors") choosenRole = "./images/lecturer.png";
+       else if(assignedRole == "Students") choosenRole = "./images/student.png";
        return choosenRole;
    }
 

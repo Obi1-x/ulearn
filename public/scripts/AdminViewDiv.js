@@ -66,7 +66,7 @@ class AdminViewDiv extends React.Component {
      <div className="container-fluid">
 
         <div className="d-flex flex-row mb=3 align-items-buttom">
-         <img id="tutPageIcon" className="img-responsive img-thumbnail me=2" src="./myAdmin.jpg" width="5%" height="10"></img>
+         <img id="tutPageIcon" className="img-responsive img-thumbnail me=2" src="./images/myAdmin.jpg" width="5%" height="10"></img>
          <h2 >Administrators</h2>
         </div>
       

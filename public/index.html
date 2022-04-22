@@ -10,14 +10,14 @@
 
 
 
-<body>
+<body hidden>
     <header class="d-flex flex-wrap py-3 border-bottom">
       <a href="/index.html" class="d-flex navbar-brand ms-2 mb-3 mb-md-0 me-md-auto text-dark">
-         <img src="./graduate_cap.png" alt="Ulearn logo" width="30" height="24">
+         <img src="./images/graduate_cap.png" alt="Ulearn logo" width="30" height="24"/>
          ULearn
       </a>
 
-      <ul class="nav nav-pills">
+      <ul id="headernavi" class="nav nav-pills">
       <div id="mainNav">
         <li class="nav-item d-flex flex-row">
          <a href="#courses" class="nav-link px-2 text-muted">Courses</a>
@@ -57,7 +57,7 @@
      <ul id="navbarNavChild" class="navbar-nav nav-pills flex-column mb-auto bg-success" style="object-fit: contain;">
 
       <li class="d-flex flex-xl-column align-items-xl-center flex-sm-row mt-2">
-       <img id="prpic" class="img-responsive rounded-circle img-thumbnail mt-xl-3" src="./blank_pic.png" style="width: 50%"></img>
+       <img id="prpic" class="img-responsive rounded-circle img-thumbnail mt-xl-3" src="./images/blank_pic.png" style="width: 50%"></img>
        <a href="/profile_settings.html" class="text-light align-self-sm-end align-self-xl-center text-decoration-none"><h4 id="nav_uname">Username</h4></a>
        <text id="nav_role" class="text-light align-self-xl-center align-self-sm-end ms-2 mb-2">Role</text>
       </li>
@@ -65,7 +65,7 @@
       <hr id="who_is_active" class="bg-light" activated="home"/> <!--Might remove activated-->
 
       <li class="nav-item"> <!-- SVG or img Icon before text -->
-        <a onclick="NavSelections(this);" id="defaultClick" href="#" class="nav-link active" aria-current="page">Home</a>
+        <a onclick="NavSelections(this);" id="defaultClick" href="#" class="nav-link active" aria-current="page">All courses</a>
       </li>
 
       <li class="nav-item">
@@ -81,7 +81,7 @@
       </li>
 
       <li class="nav-item">
-        <a href="/profile_settings.html" class="nav-link">Settings</a>
+        <a onclick="NavSelections(this);" href="#" class="nav-link">Settings</a>
       </li>
 
       <hr class="bg-light"/>
@@ -94,9 +94,10 @@
 
 
 
-  
-  <div id="body_main_child" class="container py-3 bg-light" width="800" height="600"></div>
-
+   <div id="body_chief" class="container-fluid bg-light">
+    <div id="body_main_child" class="py-3 bg-light" width="800" height="600"></div> <!-- Monitor this padding -->
+    <div id="body_sub_child" class="container-fluid bg-light" width="800" height="600"></div>
+   </div>
   </div>
 
 
@@ -108,14 +109,14 @@
       <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
     </a>
 
-    <ul id="footerNav" class="nav d-flex flex-row justify-content-end">
+    <div id="footerNav" class="nav d-flex flex-row justify-content-end"><!--
       <li class="nav-item"><a href="#lectures" class="nav-link px-2 text-muted">Courses</a></li>
       <li class="nav-item"><a href="#tutors" class="nav-link px-2 text-muted">Tutors</a></li>
-      <li class="nav-item"><a href="#library" class="nav-link px-2 text-muted">Library</a></li><!--
+      <li class="nav-item"><a href="#library" class="nav-link px-2 text-muted">Library</a></li>
       <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li> 
       <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
       <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li> -->
-     </ul>
+     </div>
   </footer>
    
 
@@ -127,7 +128,7 @@
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <!-- Loads React component. -->
-    <script type="text/babel" src="scripts/offline_elements.js"></script>
+    <script type="text/babel" src="scripts/UlearnLanding.js"></script>
     <script type="text/babel" src="scripts/ulearn_functions.js"></script>
 
     <script type="text/babel" src="scripts/HomeDiv.js"></script>
@@ -143,6 +144,8 @@
     <script type="text/babel" src="scripts/AssessmentsDiv.js"></script>
     <script type="text/babel" src="scripts/AssessmentBuildDiv.js"></script>
     <script type="text/babel" src="scripts/AssessmentViewDiv.js"></script>
+
+    <script type="text/babel" src="scripts/Settings.js"></script>
 
   </body>
 </html>

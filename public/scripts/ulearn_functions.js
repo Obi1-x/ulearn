@@ -60,7 +60,7 @@ function NavSelections(clicked){
 
   if(authorizationObject.getStatus() == "enabled"){
       switch(clicked.innerHTML){
-        case "Home": if(USERROLE == "Student") {//Get courseList
+        case "All courses": if(USERROLE == "Student") {//Get courseList
                         firebase.database().ref('/ulearnData/userData/Students/' + USERNAME + '/courseList/').once('value').then(function(stuCouList){
                           studentCourseList = stuCouList.val();
                         });
@@ -117,6 +117,8 @@ function NavSelections(clicked){
                                }
                                ReactDOM.render(<AssessmentsDiv groupedssment={assessmentArray} miscData={RequiredAssementsKeys} />, bodyContainer); 
                             });
+             break;
+        case "Settings": ReactDOM.render(<SettingsDiv/>, bodyContainer);
              break;
       }
   }else if(authorizationObject.getStatus() == "disabled") ReactDOM.render(<h2> Access restricted </h2>, bodyContainer);

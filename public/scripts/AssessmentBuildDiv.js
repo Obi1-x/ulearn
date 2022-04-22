@@ -5,7 +5,7 @@ class AssessmentBuildDiv extends React.Component{
       super(props);
       this.referenceObject = {};
      }
-
+     Test
      componentDidMount() {
        this.whoToDisable();
      }
@@ -101,7 +101,7 @@ class AssessmentBuildDiv extends React.Component{
        
          <div className="my-4 col-md-6">
           <label htmlFor="asseDisc" className="form-label">Assessment discription</label>
-          <input type="text" id="asseDisc" className="form-control" placeholder="e.g Test on courses linked to this test" required="required"/>
+          <input type="text" id="asseDisc" className="form-control" placeholder="e.g A test on courses linked to this test" required="required"/>
           <div className="invalid-feedback">Sholud not be blank.</div>
          </div>
 
