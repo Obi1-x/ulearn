@@ -71,14 +71,14 @@ class LectureControlDiv extends React.Component{
 
  controlLectures(){
           var visibilityControl = "";
-          if(USERROLE == "Admin") visibilityControl = <div className="form-check form-switch">
+          if(USERROLE == "Admin") visibilityControl = <div className="form-check form-switch mt-2">
                                                        <input className="form-check-input"
                                                               type="checkbox"
                                                               id="quizVisibilityControl"
                                                               onChange={(control) => this.setVisibility(control)}
                                                               defaultChecked= {this.statusToBool(this.props.populateCourseWith.courseVisibility)}
                                                        />
-                                                       <label className="ms-1 form-check-label" htmlFor="quizVisibilityControl">{this.props.populateCourseWith.courseVisibility}</label>
+                                                       <label className="form-check-label" htmlFor="quizVisibilityControl">{this.props.populateCourseWith.courseVisibility}</label>
                                                       </div>
           return visibilityControl;
   }
@@ -111,7 +111,7 @@ class LectureControlDiv extends React.Component{
               onClick={(un) => ReactDOM.render(<ContentDiv courseValueData={coursesValuesArray} quizesValueData={regulatedAssessments} />, bodyContainer)}>Back</button>
 
       <div className="d-flex flex-column">
-       <div className="row">
+       <div className="row row-cols-sm-2 row-cols-lg-3 row-cols-xl-3">
 
         
         <div className="col-3">
@@ -125,7 +125,7 @@ class LectureControlDiv extends React.Component{
          <small className="text-muted">{"by " + this.props.populateCourseWith.creator}</small>
         </div>
 
-        <div className="col-2">{this.controlLectures()}</div>
+       <div className="col-2">{this.controlLectures()}</div>
 
        </div>
 

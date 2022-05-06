@@ -132,7 +132,7 @@ class LectureViewDiv extends React.Component{
      else uploadingPane = "";
 
      vidBuilder = <div id={"liveLecDiv_" + theLecture2.lectureIndex}
-                    className="d-flex flew-row">
+                    className="d-flex flex-column">
                    <video id={"video_" + theLecture2.lectureIndex}
                        width="450"
                        height="350"
@@ -144,7 +144,7 @@ class LectureViewDiv extends React.Component{
                    </video>
 
                    <div id={"liveLecAttend_" + theLecture2.lectureIndex}
-                        className="ms-4">
+                        className="ms-4 my-3">
                     <h5>Attendance (1 hour after launch)</h5>
                     <h6>Username             Entrytime</h6>
                     {rawAttendanceList}
@@ -243,6 +243,8 @@ class LectureViewDiv extends React.Component{
     }
   }
 
+  
+
 
   getAssessment(btnCallback){
      var cloneForBuilder = new LectureViewDiv();
@@ -281,8 +283,14 @@ class LectureViewDiv extends React.Component{
 
   selectParent(btnBack){
       if(previousClick.innerHTML == "My courses") ReactDOM.render(<LecturesDiv myCourseValueData={MyCoursesArray} />, bodyContainer);
-      else if(previousClick.innerHTML == "Course list") ReactDOM.render(<LecturesDiv myCourseValueData={CourseListArray} />, bodyContainer);
+      else if(previousClick.innerHTML == "Course list") ReactDOM.render(<LecturesDiv myCourseValueData={CourseListArray} suggestionsData={SuggestionsArray} />, bodyContainer);
       else ReactDOM.render(<HomeDiv courseValueData={coursesValuesArray} />, bodyContainer);
+  }
+
+  buildTarget(){
+    var targetAudience = "For: " + this.props.populateCourseWith.programLevel + ". ";
+    if(this.props.populateCourseWith.courseCategory) targetAudience += this.props.populateCourseWith.courseCategory;
+    return targetAudience;
   }
 
 
@@ -306,7 +314,13 @@ class LectureViewDiv extends React.Component{
               {lec.lectureIndex + ". " + lec.lectureTopic}
             </h3>
 
-            <button className="navbar-toggler collapsed d-flex align-self-end" type="button" data-bs-toggle="collapse" data-bs-target={"#navContent_" + lec.lectureIndex} aria-controls={"navContent_" + lec.lectureIndex} aria-expanded="false" aria-label="Toggle navigation">
+            <button className="navbar-toggler collapsed d-flex align-self-end"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target={"#navContent_" + lec.lectureIndex}
+                    aria-controls={"navContent_" + lec.lectureIndex}
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
               <span className="navbar-toggler-icon"></span>
             </button>
             </div>
@@ -371,13 +385,16 @@ class LectureViewDiv extends React.Component{
         <div className="col-3">
         {/*
         <PrepImage iUrl={this.props.populateCourseWith.courseImageUrl}
-                      cTitle={this.props.populateCourseWith.courseTitle}/> */}
+                   cTitle={this.props.populateCourseWith.courseTitle}/> */}
+
         </div>
 
         <div className="col-9 d-flex flex-column">
          <h5 className="card-title">{this.props.populateCourseWith.courseTitle}</h5>
          <p className="card-text">{this.props.populateCourseWith.courseDescription}</p>
-         <small className="text-muted">{"by " + this.props.populateCourseWith.creator}</small>
+         <small className="text-muted">{"By: " + this.props.populateCourseWith.creator}</small>
+         <small className="text-muted">{this.buildTarget()}</small>
+         
          {this.handleAddButton()}
         </div>
 

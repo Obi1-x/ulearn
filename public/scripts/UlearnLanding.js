@@ -7,18 +7,41 @@ const headerNavi = document.querySelector('#headernavi');
 const footerNavi = document.querySelector('#footerNav');
 const firstAuthen = localStorage.getItem("FirstAuth");
 
-const staticBanner = <div className="d-flex flex-column align-items-center bg-success py-3">
-                    <h1 className="text-light display-1 mt-3">ULearn</h1>
-                    <p className="d-flex flex-sm-wrap flex-md-wrap text-light mt-2">A remote learning platform built primarily for students of Yaba college of Technology.</p>
-                    <button className="btn btn-warning" type="submit">Get started</button>
-                   </div>
+/*
+const headerAddition = <div>
+                       <a href="/index.html" className="d-flex navbar-brand ms-2 mb-3 mb-md-0 me-md-auto text-dark">
+         <img src="./images/graduate_cap.png" alt="Ulearn logo" width="30" height="24"/>
+         ULearn
+      </a>
+                       
+                       <ul id="static_nav" className="nav nav-pills">
+                        <li className="nav-item d-flex flex-row">
+                         <a href="#courses" className="nav-link px-2 text-muted">Courses</a>
+                         <a href="#tutors" className="nav-link px-2 text-muted">Tutors</a>
+                         <a href="#library" className="nav-link px-2 text-muted">Library</a>
+                        </li>
 
-const staticFeatures =  <div className="d-flex flex-column">
+                        <li><a className="nav-link " href="#">Gallery</a></li>
+					<li><a className="nav-link " href="#">Publications</a></li>
+					<li><a className="nav-link " href="#">Events</a></li>
+					<li><a className="nav-link " href="#">News</a></li>
+					<li><a className="nav-link " href="#">Contact</a></li>
+                       </ul>
+                       </div>
+
+const staticBanner = <div className="d-flex flex-column align-items-center bg-success py-3">
+                      <img src="./images/yabatechlogo.png" alt="Live-lecture-sample" width="10%" height="10%"/>
+                      <h1 className="text-light display-1 mt-3">ULearn</h1>
+                      <p className="d-flex flex-sm-wrap flex-md-wrap text-light mt-2">A remote learning platform built primarily for students of Yaba college of Technology.</p>
+                      <button className="btn btn-warning" type="submit">Get started</button>
+                     </div>*/
+
+const staticFeatures =  <div className="d-flex flex-column mt-3">
                          <h2 className="align-self-center mt-3">Features</h2>
                          <div className="col">
 
 
-                          <div className="row row-cols-1 row-cols-md-2 border border-success rounded-3 my-5 mx-1 p-2">
+                          <div className="row row-cols-1 row-cols-md-2 border border-success rounded-3 mb-5 mx-1 p-2">
                            <div className="d-flex flex-column align-items-center">
                             <h5>Authentication</h5>
                             <ul>
@@ -26,6 +49,7 @@ const staticFeatures =  <div className="d-flex flex-column">
                              <li>Users can signin using a valid email address and strong password.</li>
                              <li>Alternatively, users can sign in using a google account.</li>
                              <li>Authentication is completed using an email verification after sign-ups.</li>
+                             <li>Authorisation gets handled by admin, who reserve the right to grant of deny access to the user.</li>
                             </ul>
                            </div>
                            <img src="./images/authflow.jpg" alt="Live-lecture-sample" width="10%" height="5%"/>
@@ -97,7 +121,7 @@ const staticFeatures =  <div className="d-flex flex-column">
                           </div>
 
                           
-                          <div className="row align-items-center row-cols-1 row-cols-md-2 row-cols-lg-5 mx-1 p-2">
+                          <div className="row align-items-center row-cols-1 row-cols-md-2 row-cols-lg-6 mx-1 p-2">
 
                            <div className="col d-flex flex-column align-items-center">
                             <img id="javascriptIcon" src="./images/javascriptlogo.jpg" alt="javascrpit-icon" width="20%" height="20%"/>
@@ -114,7 +138,12 @@ const staticFeatures =  <div className="d-flex flex-column">
                             <label htmlFor="reactIcon" className="form-label">React.js</label>
                            </div>
                            
-                           <div className="col d-flex flex-column align-items-center">
+                           <div className="col d-flex flex-column align-items-center mt-2">
+                            <img id="bootstrapIcon" src="./images/bootstrap-logo.svg" alt="bootstrap-icon" width="20%" height="20%"/>
+                            <label htmlFor="bootstrapIcon" className="form-label">Bootstrap</label>
+                           </div>
+
+                           <div className="col d-flex flex-column align-items-center mt-2">
                             <img id="gformsIcon" src="./images/gforms-logo.png" alt="gforms-icon" width="10%" height="10%"/>
                             <label htmlFor="gformsIcon" className="form-label">G-forms</label>
                            </div>
@@ -133,6 +162,13 @@ const staticFeatures =  <div className="d-flex flex-column">
 
 function loadStatic(renderTime){
         headerNavi.hidden = true; //Remember to check it out once logged out.
+
+        /*
+        console.log(document.body.children[0]);
+        var hearderRef = document.body.children[0];
+        hearderRef.innerHTML += headerAddition;
+        ReactDOM.render(headerAddition, hearderRef);*/
+
         footerNavi.style.display = "none";
         chiefBody.setAttribute('class', 'container-fluid bg-success');
         mainBody.setAttribute('class', 'bg-success');
@@ -140,7 +176,7 @@ function loadStatic(renderTime){
            ReactDOM.render(staticBanner, mainBody);
            ReactDOM.render(staticFeatures, subBody);
         }
-        if(!firstAuthen || firstAuthen == "false") document.body.hidden = false; //Reveal is authentication not executed.
+        if(!firstAuthen || firstAuthen == "false") document.body.hidden = false; //Reveal if authentication not executed.
 } 
 
 loadStatic("preRender");

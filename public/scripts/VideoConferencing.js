@@ -29,14 +29,13 @@ var isRecording = false;
 document.querySelector('#l_T').innerHTML = lecT;
 document.querySelector('#l_D').innerHTML = lecD;
 
-var abcd;
+//var abcd;
 
 
 document.addEventListener('DOMContentLoaded',  async function(r) {
 
- abcd = new AttendanceInfo(123, "John Sherpard", new Date().getTime());
- attendance.push(abcd);
- 
+ //abcd = new AttendanceInfo(123, "John Sherpard", new Date().getTime());
+ //attendance.push(abcd);
 
   options = {
     roomName: courseT + "_" + lecT,
@@ -162,6 +161,7 @@ document.addEventListener('DOMContentLoaded',  async function(r) {
                       );
   }
 
+
  function download() {
    const liveLecGivenName = options.roomName + "_" + new Date().getTime();
    var blob = new Blob(recordedChunks, {
@@ -177,6 +177,7 @@ document.addEventListener('DOMContentLoaded',  async function(r) {
    window.URL.revokeObjectURL(url);
    return liveLecGivenName;
  }
+
 
  function updateLectureLink(){
     var holdingName = "https://meet.jit.si/" + options.roomName;
@@ -200,6 +201,7 @@ document.addEventListener('DOMContentLoaded',  async function(r) {
                                         console.log("linkToLecture: ", window.opener.mountedState.linkToLecture);
                                         console.log("lecRefIndex: ", window.opener.mountedState.lecRefIndex);
  }
+
 
  class AttendanceInfo{
   constructor(liveId, dis_Name, attend_time){

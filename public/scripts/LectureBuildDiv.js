@@ -22,34 +22,47 @@ class LectureBuildDiv extends React.Component{
      const courseTitle = document.querySelector('#courseTitleEntry');
      const course_Description = document.querySelector('#courseDiscrip');
      const courseImage = document.querySelector('#imageblock');
+
+     const programLevCour = document.querySelector('#programlevel');
+     const courseCat = document.querySelector('#coursecategory');
+
      const LectureTop = document.querySelector('#lecturetopic');
      const LectureDisc = document.querySelector('#lectureDiscrip');
 
      if(this.state.select_ed == 0) {
          courseTitle.disabled = false;
-         if(LectureTop) courseTitle.value = LectureTop.value;
+         courseTitle.value = ""; 
          course_Description.disabled = false;
-         if(LectureDisc) course_Description.value = LectureDisc.value;
+         course_Description.value = "";
          courseImage.style.display = 'block';
          submitlecture.innerHTML = "Create lecture and course";
+
+         programLevCour.disabled = false;
+         programLevCour.value = "Everyone";
+         courseCat.value = "";
+
      }else if(this.state.select_ed > 0){
-          courseTitle.disabled = true;
-
           const courseListOnce = this.props.existingCourses;
-          var aCourse = courseListOnce[this.state.select_ed - 1]
+          var aCourse = courseListOnce[this.state.select_ed - 1];
 
+          courseTitle.disabled = true;
           courseTitle.value = aCourse.courseTitle;
           course_Description.disabled = true;
           course_Description.value = aCourse.courseDescription;
+
+          programLevCour.value = aCourse.programLevel;
+          programLevCour.disabled = true;
+          //courseCat.disabled = true; //MIGHT DISABLED LATER ON.
+          if(aCourse.courseCategory) courseCat.value = aCourse.courseCategory;
+
           courseImage.style.display = 'none';
           submitlecture.innerHTML = "Create lecture";
      }
    }
 
    adjustTitleField(theInput){
-    if(this.state.select_ed == 0){
-       document.querySelector('#courseTitleEntry').value = theInput.target.value;
-    }
+      const viewClassName = theInput.target.getAttribute("class");
+      if(viewClassName == "form-control is-invalid") theInput.target.setAttribute('class', 'form-control');
    }
 
    prepToSubmitLnC(btnCallB){
@@ -60,12 +73,12 @@ class LectureBuildDiv extends React.Component{
           const lMf = document.querySelector('#lectureMediaFile');
 
           if(cTi.value && cDe.value && lTo.value && lDe.value){ //If all the neccesary fields are not empty.
-             if(lMf.value && lMf.files[0].size > 500000){ //If files size > 500KB.
-                lMf.setAttribute('class', 'form-control form-control-sm is-invalid');
-                console.log("File too large for storage");
-             }else if(lMf.value && lMf.files[0].size <= 500000) {
-                this.submitLecAndCourse(btnCallB);
-             }
+             if(lMf.value){
+                if(lMf.files[0].size > 500000){ //If files size > 500KB.
+                   lMf.setAttribute('class', 'form-control is-invalid');
+                   console.log("File too large for storage");
+                }else if(lMf.files[0].size <= 500000) this.submitLecAndCourse(btnCallB);
+             }else if(!lMf.value) this.submitLecAndCourse(btnCallB);
           }else{
              var inputFields = new Array(lTo, lDe, cTi, cDe);
              var highestBlankField;
@@ -85,12 +98,18 @@ class LectureBuildDiv extends React.Component{
    async submitLecAndCourse(subB){ //THERE IS AN ERROR HERE!!!!MAKE SURE YOU DO NOT CREATE A NEW WHILE TRYING TO CREATE A NEW LECTURE.
      const courseTitle_Sub = document.querySelector('#courseTitleEntry');
      const courseDescription_Sub = document.querySelector('#courseDiscrip');
+     const programLevelForCourse = document.querySelector('#programlevel');
+     const courseCategory = document.querySelector('#coursecategory');
      const courseImage_Sub = document.querySelector('#coursepic');
 
      const lectureTop_Sub = document.querySelector('#lecturetopic');
      const lectureDisc_Sub = document.querySelector('#lectureDiscrip');
      const lectureContentText_Sub = document.querySelector('#lecContText'); lectureMediaFile
      const lectureMediaFile_Sub = document.querySelector('#lectureMediaFile');
+
+     const pWheel = document.querySelector('#updateDetailsProgressWheel2');
+     pWheel.hidden = false;
+     subB.target.disabled = true;
 
      var refCourse;
      var baseCourseRef = '/ulearnData/appData/courses/' + courseTitle_Sub.value + '_' + USERNAME + '/';
@@ -99,6 +118,9 @@ class LectureBuildDiv extends React.Component{
      if(this.state.select_ed == 0){
          refCourse = new CourseInfo(courseTitle_Sub.value, courseDescription_Sub.value); //Create new course.
          refCourse.lectureCount = 1;
+         if(courseCategory.value) refCourse.courseCategory = courseCategory.value;
+         refCourse.programLevel = programLevelForCourse.value;
+
          if(courseImage_Sub.value){
            //Upload to storage
            var imageUrlRef = '/ulearnData/courses/' + courseTitle_Sub.value;
@@ -182,6 +204,8 @@ class LectureBuildDiv extends React.Component{
                                           courseTitle_Sub.setAttribute('class', 'form-control');
                                           courseDescription_Sub.value = "";
                                           courseDescription_Sub.setAttribute('class', 'form-control');
+                                          programLevelForCourse.value = "Everyone";
+                                          coursecategory.value = "";
                                           courseImage_Sub.value = "";
                                           lectureTop_Sub.value = "";
                                           lectureTop_Sub.setAttribute('class', 'form-control');
@@ -192,6 +216,8 @@ class LectureBuildDiv extends React.Component{
                                           //lectureMediaFile_Sub.files[0] = ""; //Make sure you properly clear the contained file, or might lead to an error
                                           lectureMediaFile_Sub.setAttribute('class', 'form-control form-control-sm');
                                           this.state.select_ed = 0;
+                                          pWheel.hidden = true;
+                                          subB.target.disabled = false;
                                           }
                                       }
                                       ); //UPDATE THE COURSE LIST IF A NEW COURSE WAS CREATED AFTER SUBMISSION.
@@ -207,14 +233,14 @@ class LectureBuildDiv extends React.Component{
 
        <div className="my-4 col-md-6">
         <label htmlFor="lecturetopic" className="form-label">Lecture topic</label>
-        <input onInput={(i) => this.adjustTitleField(i)} type="text" id="lecturetopic" className="form-control" placeholder="e.g Physics-101-lecture-01" autoFocus="autoFocus" required="required"/>
-        <div className="invalid-feedback">Sholud not be blank.</div>
+        <input onChange={(i) => this.adjustTitleField(i)} type="text" id="lecturetopic" className="form-control" placeholder="e.g Solid state electronics." autoFocus="autoFocus" required="required"/>
+        <div className="invalid-feedback">Should not be blank.</div>
        </div>
        
        <div className="my-4 col-md-6">
         <label htmlFor="lectureDiscrip" className="form-label">Brief discription</label>
-        <input type="text" id="lectureDiscrip" className="form-control" placeholder="e.g Equations of motion" required="required"/>
-        <div className="invalid-feedback">Sholud not be blank.</div>
+        <input type="text" onChange={(B) => this.adjustTitleField(B)} id="lectureDiscrip" className="form-control" placeholder="e.g Introductory to diodes, transistors and other semi-conductors." required="required"/>
+        <div className="invalid-feedback">Should not be blank.</div>
        </div>
 
        <div className=" mt-4 mb-5 col-md-3">
@@ -228,18 +254,34 @@ class LectureBuildDiv extends React.Component{
        <hr/>
         <div className="col-md-6">
          <label htmlFor="courseTitleEntry" className="form-label">Course title</label>
-         <input type="text" id="courseTitleEntry" className="form-control" required="required"/>
-         <div className="invalid-feedback">Sholud not be blank.</div>
+         <input type="text" id="courseTitleEntry" onChange={(T) => this.adjustTitleField(T)} className="form-control" required="required" placeholder="e.g ECE 424"/>
+         <div className="invalid-feedback">Should not be blank.</div>
         </div>
 
         <div className="my-2 col-md-6">
          <label htmlFor="courseDiscrip" className="form-label">Course description</label>
-         <input type="text" id="courseDiscrip" className="form-control" required="required"/>
-         <div className="invalid-feedback">Sholud not be blank.</div>
+         <input type="text" id="courseDiscrip" onChange={(w) => this.adjustTitleField(w)} className="form-control" required="required" placeholder="e.g Electrical & Computer Engineering for higher level."/>
+         <div className="invalid-feedback">Should not be blank.</div>
+        </div>
+
+        <div className=" mt-4 mb-5 col-md-3">
+        <label htmlFor="programlevel" className="form-label">Program level</label>
+        <select name="programLevelSelect" className="form-select" id="programlevel" defaultValue="Everyone">
+         <option value="Everyone">Everyone</option>
+         <option value="OND 1">OND 1</option>
+         <option value="OND 2">OND 2</option>
+         <option value="HND 1">HND 1</option>
+         <option value="HND 2">HND 2</option>
+        </select>
+       </div>
+
+        <div className="my-2 col-md-6">
+         <label htmlFor="coursecategory" className="form-label">Course category. Separate each parameter by a comma.</label>
+         <input type="text" id="coursecategory" className="form-control" placeholder="e.g Computer engineering, Electrical engineering"/>
         </div>
 
         <div id="imageblock" className="mb-3">
-          <label htmlFor="coursepic" className="form-label">Course Image</label>
+          <label htmlFor="coursepic" className="form-label">Course Image (Optional).</label>
           <input type="file" accept="image/*" id="coursepic" className="form-control form-control-sm" aria-label="Small file input example"/>
         </div>
        <hr/>
@@ -254,7 +296,12 @@ class LectureBuildDiv extends React.Component{
 
        </div>
 
-       <button id="submitlecture" onClick={(d) => this.prepToSubmitLnC(d)} type="submit" className="btn btn-primary my-3">Create lecture and course</button>
+       <button id="submitlecture" onClick={(away) => this.prepToSubmitLnC(away)} type="submit" className="btn btn-primary my-3">Create lecture and course</button>
+       <div id="updateDetailsProgressWheel2" className="spinner-border text-primary ms-2 mt-4" role="status" hidden="hidden">
+        <span className="visually-hidden">Loading...</span>
+       </div>
+
+
       </div>
      );
    }

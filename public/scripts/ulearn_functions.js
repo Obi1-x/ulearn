@@ -3,21 +3,16 @@
 const bodyContainer = document.querySelector('#body_main_child');
 var renderedBodyContainer;
 var previousClick, studentCourseList, numOfCourses;
-var coursesValuesArray, MyCoursesArray, CourseListArray, RequiredAssements, RequiredAssementsKeys;
-
-
-class DashboardDiv extends React.Component {
-   render() {
-     return (<h1>DASHBOARD</h1>);
-   }
-}
-//========================================================================End inner component classes
+var coursesValuesArray, MyCoursesArray, CourseListArray, SuggestionsArray, RequiredAssements, RequiredAssementsKeys;
+var filterVar;
 
 
 class CourseInfo{
   constructor(title, decrip){
 	this.courseTitle = title;
     this.courseDescription = decrip;
+    //this.courseCategory = "empty";
+    this.programLevel = "none";
     this.courseImageUrl = "nullImage";
     this.courseVisibility = "enabled";
     this.creator = USERNAME;
@@ -61,10 +56,14 @@ function NavSelections(clicked){
   if(authorizationObject.getStatus() == "enabled"){
       switch(clicked.innerHTML){
         case "All courses": if(USERROLE == "Student") {//Get courseList
-                        firebase.database().ref('/ulearnData/userData/Students/' + USERNAME + '/courseList/').once('value').then(function(stuCouList){
-                          studentCourseList = stuCouList.val();
-                        });
-                     }
+                               firebase.database().ref('/ulearnData/userData/Students/' + USERNAME + '/courseList/').once('value').then(function(stuCouList){
+                                studentCourseList = stuCouList.val();
+                               });
+
+                               firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/profileDetails/').once('value').then(function(studentDetails){
+                                filterVar = studentDetails.val();
+                               });
+                            }
 
                      coursesValuesArray = new Array();
                      firebase.database()
@@ -85,16 +84,21 @@ function NavSelections(clicked){
 
                      firebase.database().ref('/ulearnData/appData/courses/').off('child_added')  //remove listener from path();
              break;
-        case "Dashboard": ReactDOM.render(<DashboardDiv/>, bodyContainer); //TODO close nav drawer after selection
+        case "Dashboard": ReactDOM.render(<DashboardDiv/>, bodyContainer);
              break;
-        case "Course list": var courseListArray = new Array(); 
+        case "Course list": var courseListArray = new Array();
+                            var suggestionsArray = new Array();
                             coursesValuesArray.forEach(couItm => {
-                              if(hasAdded(couItm.courseTitle + "_" + couItm.creator)){
-                                 courseListArray.push(couItm);
+                            var wasAdded = hasAdded(couItm.courseTitle + "_" + couItm.creator);
+                              if(wasAdded) courseListArray.push(couItm);
+                              else if(!wasAdded && filterVar){
+                                   if(filterVar.programLevel && couItm.programLevel == filterVar.programLevel || filterVar.programLevel && couItm.programLevel == "Everyone") suggestionsArray.push(couItm); 
                               }
                             });
+
                             CourseListArray = courseListArray;
-                            ReactDOM.render(<LecturesDiv myCourseValueData={courseListArray} />, bodyContainer);
+                            SuggestionsArray = suggestionsArray; //NOTE COURSE SUGGESTIONS IS ONLY DONE BY PROGRAM LEVEL FOR NOW.
+                            ReactDOM.render(<LecturesDiv myCourseValueData={courseListArray} suggestionsData={suggestionsArray} />, bodyContainer);
              break;
         case "My courses": MyCoursesArray = findMyCourses();
                            ReactDOM.render(<LecturesDiv myCourseValueData={MyCoursesArray} />, bodyContainer); 
@@ -118,10 +122,18 @@ function NavSelections(clicked){
                                ReactDOM.render(<AssessmentsDiv groupedssment={assessmentArray} miscData={RequiredAssementsKeys} />, bodyContainer); 
                             });
              break;
-        case "Settings": ReactDOM.render(<SettingsDiv/>, bodyContainer);
+        case "Settings": firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/profileDetails/').once('value').then(function(userDetails){
+                           ReactDOM.render(<SettingsDiv initialDetails={userDetails.val()} />, bodyContainer);
+                         })
              break;
       }
-  }else if(authorizationObject.getStatus() == "disabled") ReactDOM.render(<h2> Access restricted </h2>, bodyContainer);
+  }else if(authorizationObject.getStatus() == "disabled"){
+           if(clicked.innerHTML == "Settings"){
+              firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/profileDetails/').once('value').then(function(userDetails){
+                        ReactDOM.render(<SettingsDiv initialDetails={userDetails.val()} />, bodyContainer);
+                       })
+           }else ReactDOM.render(<h2> Access restricted </h2>, bodyContainer);
+  }
 
   const maxImgWidth = 800;
   var imgWidth = document.querySelector('html').clientWidth;

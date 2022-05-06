@@ -5,8 +5,11 @@ var authUI = document.getElementById('authenticate');
 var roleUI = document.getElementById('roleSelect');
 var roleHeader = document.getElementById('roleheader');
 var roleContainer = document.getElementById('roleS1');
-var adminApplyBtn = document.getElementById('adminApply');
+var inputVeriContainer = document.getElementById('userInputVeri');
 var submitRoleBtn = document.getElementById('submitRole');
+var orLabel = document.getElementById('ordis');
+var adminApplyBtn = document.getElementById('adminApply');
+
 
 function firstFunction(userName){
     selectedRole = "Student";
@@ -16,12 +19,16 @@ function firstFunction(userName){
        adminApplyBtn.style.display = 'none';
        submitRoleBtn.style.display = 'none';
        roleUI.style.display = 'none';
+       inputVeriContainer.style.display = 'none';
+       orLabel.style.display = 'none';
     }else{
        roleUI.style.display = 'block';
        adminApplyBtn.style.display = 'block';
        submitRoleBtn.style.display = 'block';
        roleContainer.style.display = 'block';
        roleHeader.style.display = 'block';
+       inputVeriContainer.style.display = 'block';
+       orLabel.style.display = 'block';
     }
 }
 
@@ -105,6 +112,7 @@ function UIconfig(){
 function simuClick(reference){
     var studentCard = document.getElementById('studentcard');
     var tutorCard = document.getElementById('tutorcard');
+    var userVerificationInput = document.getElementById('verification-id-input');
 
     reference.setAttribute('class', 'card mx-2 border-primary');
     reference.children[1].setAttribute('class', 'card-title align-self-center text-primary');
@@ -114,25 +122,33 @@ function simuClick(reference){
         console.log(selectedRole);
         tutorCard.setAttribute('class', 'card mx-2');
         tutorCard.children[1].setAttribute('class', 'card-title align-self-center text-dark');
+        userVerificationInput.labels[0].innerHTML = "Matric no:";
     }else if(reference == tutorCard){
         selectedRole = "Tutor";
         console.log(selectedRole);
         studentCard.setAttribute('class', 'card mx-2');
         studentCard.children[1].setAttribute('class', 'card-title align-self-center text-dark');
+        userVerificationInput.labels[0].innerHTML = "Staff ID:";
     }
 }
 
-function toRoleSelect(){
+function toRoleSelect(){ //upload the matric no or staff Id
+  var userVeriInputAgain = document.getElementById('verification-id-input');
   firstFunction(user_name);
   authUI.style.display = 'none';
 
-  submitRoleBtn.addEventListener('click', (e) => {
-     if(selectedRole != null) {
-        firebase.database().ref('/ulearnData/userData/' + selectedRole + 's/applications/' + user_name + '/authorizationStatus/').set("enabled", (failedApplyi) => {
+  submitRoleBtn.addEventListener('click', async(e) => {
+     if(selectedRole != null && userVeriInputAgain.value){
+
+        firebase.database().ref('/ulearnData/userData/' + selectedRole + 's/applications/' + user_name + '/authorizationStatus/').set("disabled", (failedApplyi) => {
             if(failedApplyi) console.log("error at " +selectedRole+ " application");
         }); //enabled by default.
 
-        firebase.database().ref('/ulearnData/userData/roles/' + user_name + '/').set(selectedRole, (failedRole) => {
+        var profileKey = "matricNo";
+        if(selectedRole == "Tutor") profileKey = "staffId";
+        await firebase.database().ref('/ulearnData/userData/' + selectedRole + 's/' + user_name + '/profileDetails/' + profileKey + '/').set(userVeriInputAgain.value);
+
+        await firebase.database().ref('/ulearnData/userData/roles/' + user_name + '/').set(selectedRole, (failedRole) => {
              if(failedRole) console.log("error at role assignment")
              else if(!failedRole){
                      alert("Welcome to ULearn");
@@ -140,7 +156,9 @@ function toRoleSelect(){
                      window.location.pathname = './index.html';
              }
             });
-      }
+     }else if(!userVeriInputAgain.value){
+          userVeriInputAgain.setAttribute('class', 'form-control is-invalid');
+     }
   });
 
   adminApplyBtn.addEventListener('click', (ad) => {
@@ -175,4 +193,8 @@ async function toUISelect(){
                           if(checkedRole.val() == "Admin") window.location.pathname = './adminpage.html';
                           else window.location.pathname = './index.html';
                         });
+}
+
+function clearErrors(theVeriInput){
+  theVeriInput.setAttribute('class', 'form-control');
 }

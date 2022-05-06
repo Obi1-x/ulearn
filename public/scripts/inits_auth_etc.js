@@ -88,9 +88,10 @@ function signingOut(et){
    et.preventDefault();
    et.stopPropagation();
    console.log("Signing out");
-   firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/status/').set("offline", (error) => {
-       localStorage.setItem("FirstAuth", false);
+   firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/status/').set("offline", async function(error){
        if(!error) firebase.auth().signOut();
+       localStorage.setItem("FirstAuth", false);
+       await firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/profileDetails/profilePicUrl/').off('value');
        alert("See you soon!");  //FIND ANOTHER WAY TO INDICATE OFFLINE STATUS.
        window.location.pathname = './index.html';
    });
@@ -110,7 +111,14 @@ async function tidyNavDrawer(){
                USERROLE = userRole.val();
                document.getElementById('nav_role').innerHTML = USERROLE;
                firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/status/').set("online");
-			});
+			}); 
+            
+            /*
+  firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/profileDetails/profilePicUrl/').on('value', (theProImageUrl) => {
+        var prpReference = document.getElementById("prpic");
+        const returnedImage = theProImageUrl.val();
+        if(returnedImage) prpReference.src = returnedImage;
+  });*/
 
   if(USERROLE == "Tutor"){ //My Courses
         document.querySelector('#navDrawer').setAttribute('class', 'bg-dark sticky-top');

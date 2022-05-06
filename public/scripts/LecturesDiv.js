@@ -21,8 +21,22 @@ class LecturesDiv extends React.Component {
         return createB;
   }
 
+  displaySuggestions(){
+     var suggestionsToDisplay;
+     if(USERROLE == "Student" && this.props.suggestionsData != null){
+       suggestionsToDisplay =  <div>
+                                <br/><hr/>
+                                <BodyContent id = "suggestions" 
+                                            header = "Suggestions"
+                                            itemValues = {this.props.suggestionsData}
+                                            forWho = "others"/>
+                               </div>
+     }
+     return suggestionsToDisplay;
+   }
+
    render() {
-     return (
+     return(
       <div>
 
       {this.checkRole()}
@@ -32,6 +46,8 @@ class LecturesDiv extends React.Component {
                     header = {this.headerValue}
                     itemValues = {this.props.myCourseValueData}
                     forWho = "others"/>
+       
+      {this.displaySuggestions()}
 
      </div>
      );
