@@ -7,16 +7,39 @@
     <title>Welcome to ULearn</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <script type="module" src='scripts/carryFirebase.js'></script>
+    <style>
+     .b-example-divider {
+         height: 3rem;
+         background-color: rgba(0, 0, 0, .1);
+         border: solid rgba(0, 0, 0, .15);
+         border-width: 1px 0;
+         box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+    </style>
     </head>
 
 
 
 <body hidden>
     <header class="d-flex flex-wrap py-3 border-bottom">
+
       <a href="/index.html" class="d-flex navbar-brand ms-2 mb-3 mb-md-0 me-md-auto text-dark">
          <img src="./images/graduate_cap.png" alt="Ulearn logo" width="30" height="24"/>
          ULearn
       </a>
+
+      <ul class="mt-3 navbar-collapse collapse" id="landing_nav" style=""></ul>
+
+      <button class="navbar-toggler collapsed sticky-top btn-outline-success" 
+              type="button" 
+              data-bs-toggle="collapse" 
+              data-bs-target="#landing_nav" 
+              aria-controls="landing_nav" 
+              aria-expanded="false" 
+              aria-label="Toggle navigation"
+              id="nav_control_btn">
+      <span class="navbar-toggler-icon"></span>
+      </button>
 
       <ul id="headernavi" class="nav nav-pills">
        <div id="mainNav">
@@ -97,7 +120,7 @@
 
    <div id="body_chief" class="container-fluid bg-light">
     <div id="body_main_child" class="py-3 bg-light" width="800" height="600"></div> <!-- Monitor this padding -->
-    <div id="body_sub_child" class="container-fluid bg-light" width="800" height="600"></div>
+    <div id="body_sub_child" class="bg-light" width="800" height="600"></div>
    </div>
   </div>
 

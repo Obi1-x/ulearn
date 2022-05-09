@@ -349,7 +349,7 @@ class LectureViewDiv extends React.Component{
       
      return(
      <div>
-      <button className="btn bg-success mb-3" onClick={(un) => this.selectParent(un)}>Back</button>
+      <button className="btn bg-success text-light mb-3" onClick={(un) => this.selectParent(un)}>Back</button>
 
       <div id="mdrop" className="modal-backdrop fade" style={{display: "none"}}></div>
 
@@ -383,9 +383,9 @@ class LectureViewDiv extends React.Component{
 
        
         <div className="col-3">
-        {/*
+        
         <PrepImage iUrl={this.props.populateCourseWith.courseImageUrl}
-                   cTitle={this.props.populateCourseWith.courseTitle}/> */}
+                   cTitle={this.props.populateCourseWith.courseTitle}/>
 
         </div>
 

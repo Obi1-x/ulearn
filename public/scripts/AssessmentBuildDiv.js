@@ -90,7 +90,7 @@ class AssessmentBuildDiv extends React.Component{
      render(){
        return(
         <div>
-        <button className="btn bg-success mb-3" onClick={(lin) => ReactDOM.render(<LectureViewDiv populateCourseWith={this.props.parentData}/>, bodyContainer)}>Back</button>
+        <button className="btn bg-success text-light mb-3" onClick={(lin) => ReactDOM.render(<LectureViewDiv populateCourseWith={this.props.parentData}/>, bodyContainer)}>Back</button>
          <h3>New Assessment</h3>
 
          <div className="my-4 col-md-6">

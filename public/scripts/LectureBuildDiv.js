@@ -227,7 +227,7 @@ class LectureBuildDiv extends React.Component{
      return (
       <div>
 
-       <button className="btn bg-success" onClick={(un) => ReactDOM.render(<LecturesDiv myCourseValueData={MyCoursesArray} />, bodyContainer)}>Back</button>
+       <button className="btn bg-success text-light" onClick={(un) => ReactDOM.render(<LecturesDiv myCourseValueData={MyCoursesArray} />, bodyContainer)}>Back</button>
 
        <h3>New lecture</h3>
 

@@ -112,7 +112,7 @@ class AssessmentViewDiv extends React.Component{
        this.setupQuizBody();
        return(
          <div>
-          <button className="btn bg-success mb-3" onClick={(un) => this.selectParent(un)}>Back</button>
+          <button className="btn bg-success text-light mb-3" onClick={(un) => this.selectParent(un)}>Back</button>
 
           <div className="d-flex flex-row justify-content-between">
            <h1>{this.props.neededData.assessmentTitle}</h1>

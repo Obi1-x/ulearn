@@ -10,6 +10,8 @@ var submitRoleBtn = document.getElementById('submitRole');
 var orLabel = document.getElementById('ordis');
 var adminApplyBtn = document.getElementById('adminApply');
 
+const whoToAuth = localStorage.getItem("authUIFor");
+
 
 function firstFunction(userName){
     selectedRole = "Student";
@@ -32,7 +34,30 @@ function firstFunction(userName){
     }
 }
 
+function quickMod(){
+  var identityHeader = document.getElementById('identity_header');
+  var authHeading = document.getElementById('auth_guide_header');
+  switch(whoToAuth){
+        case "student": identityHeader.setAttribute('class', 'container-fluid nav nav-pills bg-success');
+                        identityHeader.children[0].src = "./images/student.png";
+                        authHeading.innerHTML += " student.";
+        break;
+
+        case "tutor": identityHeader.setAttribute('class', 'container-fluid nav nav-pills bg-dark');
+                      identityHeader.children[0].src = "./images/lecturer.png";
+                      identityHeader.children[0].width = "50";
+                      authHeading.innerHTML += " tutor.";
+        break;
+
+        case "admin": identityHeader.setAttribute('class', 'container-fluid nav nav-pills bg-info');
+                      identityHeader.children[0].src = "./images/myAdmin.jpg";
+                      authHeading.innerHTML += " administrator.";
+        break;
+  }
+}
+
 firstFunction(user_name);
+quickMod();
 
 document.addEventListener('DOMContentLoaded', function() {
 	UIconfig();
@@ -46,6 +71,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }else if(!user){     //Signed in.  Load Logged in page
             var ui = new firebaseui.auth.AuthUI(firebase.auth());
             ui.start('#firebaseui-auth-container', uiConfig);
+            var toChangeHeading = ui.fd.children[0].firstChild;
+            toChangeHeading.firstChild.firstChild.innerHTML = "Register / Login with email";
         }
     });
 
@@ -64,6 +91,7 @@ function UIconfig(){
       }else if(!firstSign){
           toUISelect();
       }
+      localStorage.removeItem("authUIFor");
 
       //alert("Welcome to ULearn! Please choose a role.");
       return false;
@@ -77,8 +105,7 @@ function UIconfig(){
   signInFlow: 'popup',
   signInSuccessUrl: '',
   signInOptions: [
-    firebase.auth.EmailAuthProvider.PROVIDER_ID,
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID
+    firebase.auth.EmailAuthProvider.PROVIDER_ID
   ],
   // Terms of service url.
   tosUrl: '<your-tos-url>',

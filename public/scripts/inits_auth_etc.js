@@ -24,10 +24,11 @@ function adjustments(task){
       reusableButton.setAttribute('class', 'btn btn-primary');
       setLoginListerners(CLEAR, reusableButton);
 
+      /*
       if(task == "adjt"){
          setLoginListerners(SET_IN, reusableButton);
          setLoginListerners(SET_IN, document.getElementById('body_main_child'));
-      }
+      }*/
     }
 }
 
@@ -50,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
              setLoginListerners(SET_OUT, reusableButton);
              reusableButton.innerHTML = "Sign out";
              reusableButton.setAttribute('class', 'btn bg-danger text-light');
-             setLoginListerners(CLEAR, document.getElementById('body_main_child'));
+             //setLoginListerners(CLEAR, document.getElementById('body_main_child'));
 
              tidyNavDrawer();
           }else if(!user){    //Not Signed in.
@@ -72,7 +73,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function setLoginListerners(action, loginElement){
     if(action == SET_IN){
-       loginElement.addEventListener('click', function(e){signingIn();});
+       loginElement.addEventListener('click', function(e){signingIn("ALL");});
     }else if(action == SET_OUT){
        loginElement.addEventListener('click', function(a){signingOut(a);});
     }else if(action == CLEAR){
@@ -80,7 +81,8 @@ function setLoginListerners(action, loginElement){
     }
 }
 
-function signingIn(){
+function signingIn(asin){
+    localStorage.setItem("authUIFor", asin);
     window.location.pathname = './login.html'; //Redirect to login page.
 }
 
@@ -88,10 +90,10 @@ function signingOut(et){
    et.preventDefault();
    et.stopPropagation();
    console.log("Signing out");
+   firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/profileDetails/profilePicUrl/').off('value');
    firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/status/').set("offline", async function(error){
        if(!error) firebase.auth().signOut();
        localStorage.setItem("FirstAuth", false);
-       await firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/profileDetails/profilePicUrl/').off('value');
        alert("See you soon!");  //FIND ANOTHER WAY TO INDICATE OFFLINE STATUS.
        window.location.pathname = './index.html';
    });
@@ -113,12 +115,12 @@ async function tidyNavDrawer(){
                firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/status/').set("online");
 			}); 
             
-            /*
+            
   firebase.database().ref('/ulearnData/userData/' + USERROLE + 's/' + USERNAME + '/profileDetails/profilePicUrl/').on('value', (theProImageUrl) => {
         var prpReference = document.getElementById("prpic");
         const returnedImage = theProImageUrl.val();
         if(returnedImage) prpReference.src = returnedImage;
-  });*/
+  });
 
   if(USERROLE == "Tutor"){ //My Courses
         document.querySelector('#navDrawer').setAttribute('class', 'bg-dark sticky-top');
