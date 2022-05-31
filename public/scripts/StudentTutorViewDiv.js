@@ -1,6 +1,18 @@
 'use strict'
 
+function CallStudOrTutDiv(theProp1, theProp2, theProp3){
+ return <StudentTutorViewDiv populatingFor={theProp1} roleData={theProp2} rAuthData={theProp3}/>
+}
+
 class StudentTutorViewDiv extends React.Component{
+
+   randomActivity(){ //Remove this afterwards
+     var labelToReturn = <h6 className="text-success">Active</h6>
+     var dice = Math.floor(Math.random() * 1.25);
+     if(dice == 1) labelToReturn = <h6 className="text-danger">Inactive</h6>
+     return labelToReturn;
+   }
+
    manageTutors(){
         var tutorListview = "null"; //Add feature: Click Tutor`s username to show more of its infor
         var moreData = this.props.rAuthData;
@@ -41,6 +53,7 @@ class StudentTutorViewDiv extends React.Component{
                                                                                <h6>{this.nullCheckSetter("Fullname: ", studTutVal[1].profileDetails["fullName"])}</h6>
                                                                                <h6>{this.nullCheckSetter("Gender: ", studTutVal[1].profileDetails["gender"])}</h6>
                                                                                {this.infoLoader(studTutVal[1].profileDetails)}
+                                                                               {this.randomActivity()}
                                                                               </div>
                                                                              </div>
 

@@ -1,5 +1,9 @@
 'use strict';
 
+function CallContentDiv(contentProp1, contentProp2){
+ return <ContentDiv courseValueData={contentProp1} quizesValueData={contentProp2}/>
+}
+
 class ContentDiv extends React.Component {
   constructor(props) {
     super(props);

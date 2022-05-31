@@ -1,5 +1,13 @@
 'use strict';
 
+function accessRestricted(){
+    return <h2>Access restricted</h2>
+}
+
+function CallHomeDiv(homeProp1){
+ return <HomeDiv courseValueData={homeProp1}/>
+}
+
 class HomeDiv extends React.Component {
   constructor(props) {
     super(props);
@@ -9,6 +17,7 @@ class HomeDiv extends React.Component {
   }
 
   render() {
+    var fakeLib = new Array();
     return (
      <div>
       <BodyContent 
@@ -24,14 +33,14 @@ class HomeDiv extends React.Component {
                    id={"tutors"} 
                    header={"Tutors"}
                    itemValues = {this.props.courseValueData}
-                   forWho = "others"/>
+                   forWho = "others"/>*/}
 
       <BodyContent 
                    id={"library"} 
                    header={"Library"}
-                   itemValues = {this.props.courseValueData}
-                   forWho = "libs"/>*/}
+                   itemValues = {fakeLib}
+                   forWho = "libs"/>
      </div>
-    );
+    ); //Previous : forWho = "libs"
   }
 }

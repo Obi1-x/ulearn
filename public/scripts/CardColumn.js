@@ -1,5 +1,9 @@
 'use strict';
 
+function unauthorisedAdmin(){
+ return <h2> Unauthorised Admin </h2>
+}
+
 class CardColumn extends React.Component{
    addcourseToList(clickarg){
     var courseListRef = '/ulearnData/userData/Students/' + USERNAME + '/courseList/' + this.props.dataCollection.courseTitle + "_" + this.props.dataCollection.creator;

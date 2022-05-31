@@ -1,5 +1,10 @@
 'use strict';
 
+function CallDashboardDiv(){
+ return <DashboardDiv/>
+}
+
+
 class DashboardDiv extends React.Component {
 
 componentDidMount(){

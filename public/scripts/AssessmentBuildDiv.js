@@ -5,7 +5,7 @@ class AssessmentBuildDiv extends React.Component{
       super(props);
       this.referenceObject = {};
      }
-     Test
+     
      componentDidMount() {
        this.whoToDisable();
      }
@@ -13,8 +13,10 @@ class AssessmentBuildDiv extends React.Component{
      whoToDisable(compare){
       this.referenceObject[this.props.parentData.courseTitle] = this.props.parentData.creator;
       var todisAble = document.getElementById("checkID_" + this.props.parentData.courseTitle + '_' + this.props.parentData.creator);
-      todisAble.checked = true;
-      todisAble.disabled = true;
+      if(todisAble){
+         todisAble.checked = true;
+         todisAble.disabled = true;
+      }
      }
 
      buildCheckList(){
@@ -106,7 +108,7 @@ class AssessmentBuildDiv extends React.Component{
          </div>
 
          <div className=" mt-4 mb-5 col-md-3">
-          <label htmlFor="couRefChecks" className="form-label">Course reference</label>
+          <label htmlFor="couRefChecks" className="form-label">Course reference (Leave unchecked if not needed)</label>
           <div id="couRefChecks">
            {this.buildCheckList()}
           </div>

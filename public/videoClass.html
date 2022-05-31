@@ -21,21 +21,20 @@
          <h5 id="l_D" class="d-flex ms-2 text-secondary">Lecture description</h4>
          </div>
       </a>
-
-      
-
-      <!--
-      <ul class="nav nav-pills">
-      <div id="mainNav">
-        <li class="nav-item d-flex flex-row">
-         <a href="#courses" class="nav-link px-2 text-muted">Settings</a>
-        </li>
-       </div>
-      </ul> -->
-
     </header>
 
-
+  <div id="mr_anchor"class="d-flex flex-row justify-content-end">
+   <h6 class="my-2">Anchor Virtual class</h6>
+   <div class="form-check form-switch mx-3">
+    <input class="form-check-input"
+           type="checkbox"
+           id="anchor_option"
+           onchange="AttendToAnchor(this)"
+           defaultChecked="false"
+           />
+    <label class="form-check-label" for="anchor_option" >Unrecorded</label>
+   </div>
+  </div>
 
   <div id="videoB" class="container-fluid" width="1280" height="1080"></div>
   <div id="video_body" class="container-fluid py-3 bg-light">

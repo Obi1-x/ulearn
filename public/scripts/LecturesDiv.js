@@ -1,5 +1,9 @@
 'use strict';
 
+function CallLecturesDiv(lectureProp1, lectureProp2){
+ return <LecturesDiv myCourseValueData={lectureProp1} suggestionsData={lectureProp2} />
+}
+
 class LecturesDiv extends React.Component {
    constructor(props) {
     super(props);

@@ -14,10 +14,8 @@ const whoToAuth = localStorage.getItem("authUIFor");
 
 
 function firstFunction(userName){
-    selectedRole = "Student";
+    selectedRole = whoToAuth;
     if(userName == null){
-       roleHeader.style.display = 'none';
-       roleContainer.style.display = 'none';
        adminApplyBtn.style.display = 'none';
        submitRoleBtn.style.display = 'none';
        roleUI.style.display = 'none';
@@ -27,37 +25,43 @@ function firstFunction(userName){
        roleUI.style.display = 'block';
        adminApplyBtn.style.display = 'block';
        submitRoleBtn.style.display = 'block';
-       roleContainer.style.display = 'block';
-       roleHeader.style.display = 'block';
        inputVeriContainer.style.display = 'block';
        orLabel.style.display = 'block';
     }
 }
 
 function quickMod(){
+  console.log(whoToAuth);
   var identityHeader = document.getElementById('identity_header');
   var authHeading = document.getElementById('auth_guide_header');
+  var userVerificationInput = document.getElementById('verification-id-input');
   switch(whoToAuth){
-        case "student": identityHeader.setAttribute('class', 'container-fluid nav nav-pills bg-success');
+        case "Student": identityHeader.setAttribute('class', 'container-fluid nav nav-pills bg-success');
                         identityHeader.children[0].src = "./images/student.png";
                         authHeading.innerHTML += " student.";
+                        userVerificationInput.labels[0].innerHTML = "Matric no:";
+                        document.getElementById("adminApply").disabled = true;
         break;
 
-        case "tutor": identityHeader.setAttribute('class', 'container-fluid nav nav-pills bg-dark');
+        case "Tutor": identityHeader.setAttribute('class', 'container-fluid nav nav-pills bg-dark');
                       identityHeader.children[0].src = "./images/lecturer.png";
                       identityHeader.children[0].width = "50";
                       authHeading.innerHTML += " tutor.";
+                      userVerificationInput.labels[0].innerHTML = "Staff ID:";
+                      document.getElementById("adminApply").disabled = true;
         break;
 
-        case "admin": identityHeader.setAttribute('class', 'container-fluid nav nav-pills bg-info');
+        case "Admin": identityHeader.setAttribute('class', 'container-fluid nav nav-pills bg-info');
                       identityHeader.children[0].src = "./images/myAdmin.jpg";
                       authHeading.innerHTML += " administrator.";
+                      userVerificationInput.disabled = true;
+                      submitRoleBtn.disabled = true;
         break;
   }
 }
 
-firstFunction(user_name);
 quickMod();
+firstFunction(user_name);
 
 document.addEventListener('DOMContentLoaded', function() {
 	UIconfig();
@@ -66,8 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if(user){
            user_name = await user.displayName;
            console.log(user_name);
-           
-           //toRoleSelect();
+
         }else if(!user){     //Signed in.  Load Logged in page
             var ui = new firebaseui.auth.AuthUI(firebase.auth());
             ui.start('#firebaseui-auth-container', uiConfig);
@@ -92,8 +95,6 @@ function UIconfig(){
           toUISelect();
       }
       localStorage.removeItem("authUIFor");
-
-      //alert("Welcome to ULearn! Please choose a role.");
       return false;
     },
     uiShown: function() {
@@ -136,40 +137,18 @@ function UIconfig(){
 });
 
 
-function simuClick(reference){
-    var studentCard = document.getElementById('studentcard');
-    var tutorCard = document.getElementById('tutorcard');
-    var userVerificationInput = document.getElementById('verification-id-input');
-
-    reference.setAttribute('class', 'card mx-2 border-primary');
-    reference.children[1].setAttribute('class', 'card-title align-self-center text-primary');
-
-    if(reference == studentcard){
-        selectedRole = "Student";
-        console.log(selectedRole);
-        tutorCard.setAttribute('class', 'card mx-2');
-        tutorCard.children[1].setAttribute('class', 'card-title align-self-center text-dark');
-        userVerificationInput.labels[0].innerHTML = "Matric no:";
-    }else if(reference == tutorCard){
-        selectedRole = "Tutor";
-        console.log(selectedRole);
-        studentCard.setAttribute('class', 'card mx-2');
-        studentCard.children[1].setAttribute('class', 'card-title align-self-center text-dark');
-        userVerificationInput.labels[0].innerHTML = "Staff ID:";
-    }
-}
-
 function toRoleSelect(){ //upload the matric no or staff Id
   var userVeriInputAgain = document.getElementById('verification-id-input');
   firstFunction(user_name);
   authUI.style.display = 'none';
 
   submitRoleBtn.addEventListener('click', async(e) => {
+     console.log(selectedRole);
      if(selectedRole != null && userVeriInputAgain.value){
 
         firebase.database().ref('/ulearnData/userData/' + selectedRole + 's/applications/' + user_name + '/authorizationStatus/').set("disabled", (failedApplyi) => {
             if(failedApplyi) console.log("error at " +selectedRole+ " application");
-        }); //enabled by default.
+        }); //disabled by default.
 
         var profileKey = "matricNo";
         if(selectedRole == "Tutor") profileKey = "staffId";

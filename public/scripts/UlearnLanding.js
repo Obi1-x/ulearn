@@ -28,9 +28,9 @@ const staticBanner = <div className="d-flex flex-column align-items-center bg-su
 
                        <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <li><h6 className="dropdown-header">Authenticate as</h6></li>
-                        <li><button className="dropdown-item" onClick={(stuAs) => signingIn("student")}>Student</button></li>
-                        <li><button className="dropdown-item" onClick={(tuAs) => signingIn("tutor")}>Tutor</button></li>
-                        <li><button className="dropdown-item" onClick={(adAs) => signingIn("admin")}>Administrator</button></li>
+                        <li><button className="dropdown-item" onClick={(stuAs) => signingIn("Student")}>Student</button></li>
+                        <li><button className="dropdown-item" onClick={(tuAs) => signingIn("Tutor")}>Tutor</button></li>
+                        <li><button className="dropdown-item" onClick={(adAs) => signingIn("Admin")}>Administrator</button></li>
                        </ul>
                       </div>
 
@@ -45,11 +45,12 @@ firebase.auth().onAuthStateChanged(firstUser => {
           if(firstUser && firstUser.displayName == USERNAME){
              headerNavi.hidden = false;
              footerNavi.hidden = false;
-             chiefBody.setAttribute('class', 'container-fluid bg-light');
-             mainBody.setAttribute('class', 'py-3 bg-light');
+             chiefBody.setAttribute('class', 'container-fluid bg-white');
+             mainBody.setAttribute('class', 'py-3 bg-white');
              ReactDOM.unmountComponentAtNode(mainBody);
              ReactDOM.unmountComponentAtNode(subBody);
              ReactDOM.unmountComponentAtNode(landingNavRef2);
+             landingNavRef2.parentElement.setAttribute('class', "d-flex flex-row justify-content-between py-3 navbar navbar-expand-lg navbar-light bg-light");
              document.getElementById("nav_control_btn").hidden = true;
           }
         });
@@ -238,17 +239,17 @@ class FeaturesDiv extends React.Component{
                           </div>
 
                           
-                          <div className="row align-items-center row-cols-1 row-cols-md-2 row-cols-lg-6 mx-2 p-2">
+                          <div className="row align-items-center row-cols-1 row-cols-md-2 row-cols-lg-5 mx-2 p-2">
 
                            <div className="col d-flex flex-column align-items-center">
                             <img id="javascriptIcon" src="./images/javascriptlogo.jpg" alt="javascrpit-icon" width="20%" height="20%"/>
                             <label htmlFor="javascriptIcon" className="form-label">Javascript</label>
                            </div>
-
+                           {/*
                            <div className="col d-flex flex-column align-items-center">
                             <img id="firebaseIcon" src="./images/firebase_28dp.png" alt="firebase-icon" width="20%" height="20%"/>
                             <label htmlFor="firebaseIcon" className="form-label">Firebase</label>
-                           </div>
+                           </div> */}
 
                            <div className="col d-flex flex-column align-items-center">
                             <img id="reactIcon" src="./images/react-logo.svg" alt="react-icon" width="20%" height="20%"/>

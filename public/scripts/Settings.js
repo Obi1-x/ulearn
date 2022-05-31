@@ -1,5 +1,8 @@
 'use strict';
 
+function CallSettingsDiv(settingsProp1){
+  return <SettingsDiv initialDetails={settingsProp1} />
+}
 
 class SettingsDiv extends React.Component{
   constructor(props) {
@@ -149,6 +152,15 @@ class SettingsDiv extends React.Component{
    return whichId;
   }
 
+  studentActivity(){
+    var showActivity = "";
+    if(USERROLE == "Student"){
+        if(authorizationObject.getStatus() == "enabled") showActivity = <h6 className="text-success">Active</h6>
+        else showActivity = <h6 className="text-danger">Inactive</h6>
+    }
+    return showActivity;
+  }
+
   render() {
     return (
      <div>
@@ -161,6 +173,7 @@ class SettingsDiv extends React.Component{
         <img id="prp" className="img-fluid rounded-circle" src={this.selectImageUrl()} width="30%" height="100%"/>
         <h5 className="display-6">{'@' + USERNAME}</h5>
         <h6>{this.matricOrStaffID()}</h6>
+        {this.studentActivity()}
        </div>
        <input type="file" 
               accept="image/*" 

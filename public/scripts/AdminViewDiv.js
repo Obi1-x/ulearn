@@ -1,5 +1,9 @@
 'use strict'
 
+function CallAdminViewDiv(adViewProp1, adViewProp2){
+ return <AdminViewDiv authoriApplyData={adViewProp1} adminAuthenStatus={adViewProp2}/>
+}
+
 class AdminViewDiv extends React.Component {
  async toggleAuthorization(buttonToEnable, applyingAdmin, tally){
 

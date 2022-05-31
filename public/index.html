@@ -57,14 +57,12 @@
 
         <li class="nav-item mx-3"><button id="goingIn">Sign in</button></li>
       </ul>
-
     </header>
-
+    
 
 
 
   <div class="d-xl-flex flex-xl-row">
-
 
   <div id="navDrawer" class="bg-success sticky-top">
    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
@@ -101,6 +99,10 @@
       </li>
 
       <li class="nav-item">
+        <a onclick="NavSelections(this);" href="#" class="nav-link">Course ware</a>
+      </li>
+
+      <li class="nav-item">
         <a onclick="NavSelections(this);" href="#" class="nav-link">Assessments</a>
       </li>
 
@@ -117,9 +119,8 @@
   </div>
 
 
-
-   <div id="body_chief" class="container-fluid bg-light">
-    <div id="body_main_child" class="py-3 bg-light" width="800" height="600"></div> <!-- Monitor this padding -->
+   <div id="body_chief" class="container-fluid bg-white">
+    <div id="body_main_child" class="py-3 bg-white" width="800" height="600"></div> <!-- Monitor this padding -->
     <div id="body_sub_child" class="bg-light" width="800" height="600"></div>
    </div>
   </div>
@@ -150,7 +151,10 @@
     <!-- Note: when deploying, replace "development.js" with "production.min.js".-->
     <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> 
+   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.25.0/babel.min.js"></script>-->
+
     <!-- Loads React component. -->
     <script type="text/babel" src="scripts/UlearnLanding.js"></script>
     <script type="text/babel" src="scripts/ulearn_functions.js"></script>
@@ -171,6 +175,11 @@
     <script type="text/babel" src="scripts/AssessmentViewDiv.js"></script>
 
     <script type="text/babel" src="scripts/Settings.js"></script>
+
+    <script type="text/babel" src="scripts/courseware.js"></script>
+
+    <script type="text/babel" src="scripts/admin_functions.js"></script>
+    <script type="text/babel" src="scripts/StudentTutorViewDiv.js"></script> <!-- Remove later or find a way to embed into courseware-->
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
